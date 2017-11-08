@@ -1,0 +1,48 @@
+<resources>
+    <!-- items -->
+    <style name="divider">
+        <item name="android:background">@color/bgDivider</item>
+        <item name="android:layout_height">@dimen/dividerLineHeight</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <!--buttons-->
+    <style name="btn" parent="Widget.AppCompat.Button.Colored"></style>
+
+    <style name="buttonBase" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+
+    <style name="btnGray" parent="buttonBase">
+        <item name="colorAccent">@color/grayLite</item>
+        <item name="colorButtonNormal">@color/gray</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="btnWhite" parent="buttonBase">
+        <item name="colorAccent">@color/white</item>
+        <item name="colorButtonNormal">@color/grayLite</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <!-- update Dialog -->
+    <style name="UpdateDialogTheme" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowCloseOnTouchOutside">false</item><!---->
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item><!---->
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">true</item><!---->
+    </style>
+
+    <style name="ServerControllerTheme" parent="Theme.AppCompat.NoActionBar" >
+        <item name="android:windowBackground">@color/transparentBlackSuperDark</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>　　
+    </style>
+</resources>

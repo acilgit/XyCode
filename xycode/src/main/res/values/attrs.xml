@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="XRefresher">
+        <!--<attr name="hint" format="string" />-->
+        <!--<attr name="hintSize" format="dimension" />-->
+        <!--<attr name="hintColor" format="color" />-->
+        <attr name="bg" format="reference|color" />
+        <!--<attr name="bgNoData" format="reference|color" />-->
+    </declare-styleable>
+
+    <declare-styleable name="NoScrollViewPager">
+        <attr name="enableScroll" format="boolean" />
+        <attr name="measureAllPages" format="boolean" />
+        <attr name="measurePageType" format="enum">
+            <enum name="fitSinglePage" value="0" />
+            <enum name="fitShownPage" value="1" />
+            <enum name="fitMaxHeightPage" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="XScrollView">
+        <attr name="maxHeight" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="XTextView">
+        <attr name="leftHeight" format="dimension" />
+        <attr name="leftWidth" format="dimension" />
+        <attr name="rightHeight" format="dimension" />
+        <attr name="rightWidth" format="dimension" />
+        <attr name="topHeight" format="dimension" />
+        <attr name="topWidth" format="dimension" />
+        <attr name="bottomHeight" format="dimension" />
+        <attr name="bottomWidth" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="BaseItemView">
+        <attr name="itemType" format="integer" />
+        <attr name="itemNum" format="integer" />
+        <attr name="itemIndex" format="integer" />
+        <attr name="itemCount" format="integer" />
+        <attr name="itemMax" format="integer" />
+        <attr name="itemMin" format="integer" />
+        <attr name="itemLength" format="integer" />
+        <attr name="itemFloat" format="float" />
+        <attr name="itemBool" format="boolean" />
+        <attr name="itemCheck" format="boolean" />
+        <attr name="itemName" format="string" />
+        <attr name="itemHint" format="string" />
+        <attr name="itemTitle" format="string" />
+        <attr name="itemContent" format="string" />
+        <attr name="itemDetail" format="string" />
+        <attr name="itemDescription" format="string" />
+        <attr name="itemIcon" format="reference" />
+        <attr name="itemColor" format="reference" />
+        <attr name="itemBg" format="reference" />
+        <attr name="itemChildColor" format="reference" />
+        <attr name="itemRes" format="reference" />
+        <attr name="itemVisible" />
+        <attr name="itemChildVisible" />
+        <!--<attr name="itemHide" />-->
+        <!--<attr name="itemGone" />-->
+        <attr name="android:inputType" />
+        <attr name="android:minLines" />
+        <attr name="android:maxLines" />
+
+    </declare-styleable>
+
+    <declare-styleable name="BaseFlowTagLayout">
+        <attr name="tagType" format="integer" />
+    </declare-styleable>
+
+    <attr name="itemVisible">
+        <enum name="visible" value="0" />
+        <enum name="invisible" value="4" />
+        <enum name="gone" value="8" />
+    </attr>
+
+    <attr name="itemChildVisible">
+        <enum name="visible" value="0" />
+        <enum name="invisible" value="4" />
+        <enum name="gone" value="8" />
+    </attr>
+
+    <declare-styleable name="NiceSpinner">
+        <attr name="arrowTint" format="color" />
+        <attr name="hideArrow" format="boolean" />
+        <attr name="backgroundSelector" format="integer" />
+        <attr name="textTint" format="color" />
+        <attr name="narrow_width" format="dimension" />
+        <attr name="narrow_height" format="dimension" />
+    </declare-styleable>
+</resources>

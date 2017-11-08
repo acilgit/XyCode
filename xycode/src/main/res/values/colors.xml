@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white" >#FFF</color>
+    <color name="black" >#000</color>
+    <color name="grayLite" >#999</color>
+    <color name="gray" >#666</color>
+    <color name="grayDark" >#333</color>
+    <color name="grayDarkDeep">#222</color>
+    <color name="grayBgLiteE" >#EEEEEE</color>
+    <color name="grayBgLiteD" >#DDDDDD</color>
+    <color name="grayBgLiteC" >#CCCCCC</color>
+    <color name="grayBgLiteB" >#BBBBBB</color>
+    <color name="grayBgPress" >#CCC</color>
+    <color name="transparent" >#00000000</color>
+    <color name="bgBlue" >#dd263f86</color>
+    <color name="logTextGolden" >#fdd383</color>
+    <color name="logTextDebug">#239fd9</color>
+    <color name="logTextInfo">#aaa</color>
+    <color name="logTextNomal">#eee</color>
+    <color name="transparentRedLite" >#33ff1d1d</color>
+    <color name="transparentWhiteLite" >#33FFFFFF</color>
+    <color name="transparentWhiteDark" >#DEFFFFFF</color>
+    <color name="transparentBlackLite" >#33000000</color>
+    <color name="transparentBlackDark" >#A0000000</color>
+    <color name="transparentBlackSuperDark" >#DD000000</color>
+    <color name="transparentGlassDark">#c8414141</color>
+    <color name="transparentSilver">#dee1e1e1</color>
+    <color name="nice_spinner_light_gray">#fff5f5f5</color>
+    <!-- background color -->
+    <color name="bgDivider">#CCC</color>
+
+</resources>
