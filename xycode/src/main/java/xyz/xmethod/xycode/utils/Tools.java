@@ -34,7 +34,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import xyz.xmethod.xycode.Xy;
-import xyz.xmethod.xycode.base.BaseActivity;
+import xyz.xmethod.xycode.base.XyBaseActivity;
 import xyz.xmethod.xycode.interfaces.Interfaces;
 import xyz.xmethod.xycode.xRefresher.recyclerviewHelper.HorizontalDividerItemDecoration;
 import xyz.xmethod.xycode.unit.ContactUnit;
@@ -803,7 +803,7 @@ public class Tools {
     public static void pickNumber(Activity activity) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
-        activity.startActivityForResult(intent, BaseActivity.REQUEST_CODE_GOT_PHONE_NUMBER);
+        activity.startActivityForResult(intent, XyBaseActivity.REQUEST_CODE_GOT_PHONE_NUMBER);
     }
 
     public static ContactUnit receivedPhoneNumber(Intent data) throws Exception {

@@ -15,7 +15,7 @@ import xyz.xmethod.xycode.R;
 import xyz.xmethod.xycode.Xy;
 import xyz.xmethod.xycode.adapter.CustomHolder;
 import xyz.xmethod.xycode.adapter.XAdapter;
-import xyz.xmethod.xycode.base.BaseActivity;
+import xyz.xmethod.xycode.base.XyBaseActivity;
 import xyz.xmethod.xycode.okHttp.Param;
 import xyz.xmethod.xycode.unit.ViewTypeUnit;
 import xyz.xmethod.xycode.utils.TS;
@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author xiuye
  */
-public class DebugActivity extends BaseActivity {
+public class DebugActivity extends XyBaseActivity {
 
     public static final String DEBUG_KEY = "DEBUG_KEY";
     public static final String PARAMS_JSON = "PARAMS_JSON";

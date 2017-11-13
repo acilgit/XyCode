@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import xyz.xmethod.xycode.R;
 import xyz.xmethod.xycode.Xy;
-import xyz.xmethod.xycode.base.BaseActivity;
+import xyz.xmethod.xycode.base.XyBaseActivity;
 import xyz.xmethod.xycode.interfaces.Interfaces;
 import xyz.xmethod.xycode.utils.LogUtil.LogItem;
 import xyz.xmethod.xycode.utils.LogUtil.LogLayout;
@@ -113,7 +113,7 @@ public class CrashActivity extends AppCompatActivity {
                 intent.putExtra(CrashActivity.MSG, info);
                 Xy.getContext().startActivity(intent);
                 // 杀死该应用进程
-                BaseActivity.exitApplication();
+                XyBaseActivity.exitApplication();
             }
 
         });

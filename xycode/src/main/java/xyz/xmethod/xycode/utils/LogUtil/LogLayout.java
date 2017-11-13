@@ -1,6 +1,7 @@
 package xyz.xmethod.xycode.utils.LogUtil;
 
 import android.animation.LayoutTransition;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
@@ -50,6 +51,7 @@ public class LogLayout {
     private static int miniSlideWidth = 40;
     private static final int maxItemContentLength = 400;
 
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -65,6 +67,9 @@ public class LogLayout {
         init();
     }
 
+    /**
+     * 初始化LogLayout
+     */
     private void init() {
         rootView = (RelativeLayout) LayoutInflater.from(context).inflate(xyz.xmethod.xycode.R.layout.layout_base_console_view, null);
         rootView.setOnTouchListener(rootViewTouchListener);
@@ -134,11 +139,6 @@ public class LogLayout {
                 rv.scrollToPosition(adapter.getShowingList().size() - 1);
             }
         });
-       /* holder.setClick(R.id.tvClear, v -> {
-            L.getLogList().clear();
-            EventBus.getDefault().post(new MsgEvent(L.EVENT_LOG, null, null));
-            slideAnimate(0, true);
-        });*/
         holder.setClick(R.id.tvDebug, v -> {
             OkHttp.setDebugMode(!OkHttp.isDebugMode());
             adapter.notifyDataSetChanged();
@@ -150,11 +150,6 @@ public class LogLayout {
 
     public View getView() {
         return rootView;
-    }
-
-    public void refreshData() {
-        adapter.setDataList(L.getLogList());
-        adapter.notifyDataSetChanged();
     }
 
     private View.OnTouchListener slideBackTouchListener = new View.OnTouchListener() {
@@ -261,6 +256,10 @@ public class LogLayout {
         }
     };
 
+    /**
+     * 滑动Layout
+     * @param x
+     */
     private void slideLayout(int x) {
         LinearLayout llLog = holder.getView(R.id.llLog);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) llLog.getLayoutParams();
@@ -268,6 +267,11 @@ public class LogLayout {
         llLog.setLayoutParams(params);
     }
 
+    /**
+     * 滑动动画
+     * @param x
+     * @param isHide
+     */
     private void slideAnimate(int x, boolean isHide) {
         int step = (isHide ? (screenWidth - x) : x) / 40;
         for (int i = 0; i < 39; i++) {

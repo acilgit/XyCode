@@ -10,13 +10,13 @@ import okhttp3.Response;
  */
 public interface IOkInit {
     /**
-     * the first time the response got from internet
+     * The first time the response got from internet
      * 0：RESULT_ERROR ;
      * 1：RESULT_SUCCESS ;
      * -1：RESULT_VERIFY_ERROR;
      * 2: RESULT_OTHER ;
      * at IOkResponse interface callback
-     *
+     * 通过返回的的数据，返回结果代码
      * @param call
      * @param response
      * @param json
@@ -25,8 +25,7 @@ public interface IOkInit {
     int judgeResultWhenFirstReceivedResponse(Call call, Response response, JSONObject json);
 
     /**
-     * no network or  or call back cancel
-     *
+     * No network or  or call cancel
      * @param call
      * @param isCanceled
      */
@@ -35,20 +34,18 @@ public interface IOkInit {
     /**
      * after judgeResultWhenFirstReceivedResponse
      * result code not in  [200...300)
-     *
      * @param call
      * @param response
      */
     void receivedNetworkErrorCode(Call call, Response response);
 
     /**
-     * after judgeResultWhenFirstReceivedResponse
+     * After judgeResultWhenFirstReceivedResponse
      * result is SUCCESS
      * returns ---
      * false: go on callbacks
      * true：interrupt callbacks
      * 可在此方法保存资料到SQLite
-     *
      * @param call
      * @param response
      * @param json
@@ -58,36 +55,31 @@ public interface IOkInit {
     boolean resultSuccessByJudge(Call call, Response response, JSONObject json, int resultCode);
 
     /**
-     * after judgeResultWhenFirstReceivedResponse
+     * After judgeResultWhenFirstReceivedResponse
      * when parse JSON failed
-     *
+     * 解释JSON出错可以在这里对返回代码做处理
      * @param call
      * @param parseErrorResult
      */
     void judgeResultParseResponseFailed(Call call, String parseErrorResult, Exception e);
 
     /**
-     * reset all Params in param
-     * when setFormBody requestBody
-     *
+     * Reset all Params in param
+     * 可在此方法进行最后参数验证加密等操作
      * @param allParams
      * @return null 不作任何处理
      */
     Param setParamsHeadersBeforeRequest(Param allParams, Header header);
 
     /**
-     * add defaultParams in param
-     * when setFormBody requestBody
-     *
+     * Add defaultParams in param
      * @param defaultParams
      * @return
      */
     Param setDefaultParams(Param defaultParams);
 
     /**
-     * add defaultHeader in header
-     * when new a request
-     *
+     * Add defaultHeader in header
      * @param defaultHeader
      * @return
      */

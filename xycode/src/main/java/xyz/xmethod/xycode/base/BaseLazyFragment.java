@@ -7,15 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.RelativeLayout;
 
-import xyz.xmethod.xycode.R;
 import xyz.xmethod.xycode.interfaces.Interfaces;
 import xyz.xmethod.xycode.unit.MsgEvent;
-import xyz.xmethod.xycode.utils.Tools;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -27,8 +22,8 @@ public abstract class BaseLazyFragment extends Fragment {
     boolean loaded = false;
     private boolean loadFailed = false;
 
-    protected BaseActivity getThis() {
-        return (BaseActivity) getActivity();
+    protected XyBaseActivity getThis() {
+        return (XyBaseActivity) getActivity();
     }
 
     @Override

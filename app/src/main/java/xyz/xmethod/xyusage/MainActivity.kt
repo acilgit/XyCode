@@ -6,14 +6,14 @@ import com.alibaba.fastjson.JSONObject
 import kotlinx.android.synthetic.main.activity_main.*
 import xyz.xmethod.xycode.adapter.CustomHolder
 import xyz.xmethod.xycode.adapter.XAdapter
-import xyz.xmethod.xycode.base.BaseActivity
+import xyz.xmethod.xycode.base.XyBaseActivity
 import xyz.xmethod.xycode.okHttp.Param
 import xyz.xmethod.xycode.unit.StringData
 import xyz.xmethod.xycode.unit.ViewTypeUnit
 import xyz.xmethod.xycode.xRefresher.RefreshRequest
 import java.util.*
 
-class MainActivity : BaseActivity() {
+class MainActivity : XyBaseActivity() {
     override fun setActivityLayout(): Int = R.layout.activity_main
 
     override fun setLoadingDialog(): AlertDialog? = null

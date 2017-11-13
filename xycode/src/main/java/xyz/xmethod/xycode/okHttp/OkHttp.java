@@ -4,7 +4,7 @@ import android.app.Activity;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import xyz.xmethod.xycode.base.BaseActivity;
+import xyz.xmethod.xycode.base.XyBaseActivity;
 import xyz.xmethod.xycode.utils.LogUtil.JsonTool;
 import xyz.xmethod.xycode.utils.LogUtil.L;
 import xyz.xmethod.xycode.utils.debugger.DebugActivity;
@@ -36,11 +36,14 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Created by XY on 2016/7/7
- * OkHttp3
+ * Created by XiuYe on 2016/7/7
+ * 对 OkHttp3 进行封装
  */
 public class OkHttp {
 
+    /**
+     * MediaType
+     */
     public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
     public static final MediaType MEDIA_TYPE_MULTI_DATA = MediaType.parse("multipart/form-data; charset=utf-8");
     @Deprecated
@@ -50,6 +53,9 @@ public class OkHttp {
 
     private static MediaType mediaType = MEDIA_TYPE_MULTI_DATA;
 
+    /**
+     * 一些静态变量
+     */
     public static final String UTF8 = "UTF-8";
     public static final String FILE = "file";
     public static final byte[] lock = new byte[0];
@@ -70,7 +76,14 @@ public class OkHttp {
     public static final int NETWORK_ERROR_CODE = 881;
     public static final int NO_NETWORK = 882;
 
+    /**
+     * OkHttpClient
+     */
     private static OkHttpClient client;
+
+    /**
+     * 初始化接口
+     */
     private static IOkInit okInit;
     private static OkHttp.OkOptions okOptions;
 
@@ -354,7 +367,7 @@ public class OkHttp {
                     @Override
                     public void onNext(@io.reactivex.annotations.NonNull ResponseItem responseItem) {
                         // 处理返回结果
-                        BaseActivity.dismissLoadingDialogByManualState();
+                        XyBaseActivity.dismissLoadingDialogByManualState();
                         handleResultWithResultCode(responseItem);
                     }
 
@@ -363,16 +376,15 @@ public class OkHttp {
                         // 处理请求中出现异常
                         throwable.printStackTrace();
                         noResponse(call[0], okResponseListener);
-                        BaseActivity.dismissLoadingDialogByManualState();
+                        XyBaseActivity.dismissLoadingDialogByManualState();
                     }
 
                     @Override
                     public void onComplete() {
                         // 请求完成，关闭自动关闭的等待对话框
-//                        BaseActivity.dismissLoadingDialogByManualState();
+//                        XyBaseActivity.dismissLoadingDialogByManualState();
                     }
                 });
-//        return call;
     }
 
     /**
@@ -420,7 +432,6 @@ public class OkHttp {
                 final int resultCode = okInit.judgeResultWhenFirstReceivedResponse(call, response, jsonObject);
                 responseItem.setResultCode(resultCode);
                 responseItem.setJsonObject(jsonObject);
-//                responseItem.setStrResult(responseStr);
                 // 判断返回的ResultCode是否可以继续操作，可以此方法执行后台操作，如集中保存数据到数据库
                 if (okInit.resultSuccessByJudge(call, response, jsonObject, resultCode)) {
                     L.e("[resultJudgeFailed] " + responseItem.getUrl(), JsonTool.stringToJSON(strResult));
@@ -535,30 +546,8 @@ public class OkHttp {
     }
 
     /**
-     * 返回结果后操作过程错误
-     * @param call
-     * @param e
-     */
-  /*
-  @Deprecated
-  private static void responseResultFailure(Call call, OkResponseListener okResponseListener, Exception e) {
-        okInit.networkError(call, call.isCanceled());
-        L.e("[Handle Response Error] " + call.request().url().url().toString(), e.getMessage());
-        e.printStackTrace();
-        if (okResponseListener != null) {
-            if (call.isCanceled()) return;
-            try {
-                okResponseListener.handleResponseFailure(call, );
-                okResponseListener.handleAllFailureSituation(call, NO_NETWORK);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
-
-    /**
      * upload file，you can setMaxTransFileCount() to set max files upload thread pool size
-     *
+     * uploadFiles暂时不提供Debug
      * @param activity
      * @param url
      * @param files
@@ -647,17 +636,6 @@ public class OkHttp {
         if (debugMode) {
             DebugItem debugItem = DebugActivity.addDebugItem(url);
             keyForDebug = debugItem.getKey();
-
-            /*DebugActivity.startThis(debugItem.getKey(), allParam);
-
-            for (int i = 0; i < 600; i++) {
-                if (debugItem.isPostBegun()) {
-                    break;
-                } else {
-                    Thread.sleep(500);
-                }
-            }
-            allParam = debugItem.getParam();*/
         }
         debugKey = keyForDebug;
 
@@ -692,19 +670,19 @@ public class OkHttp {
                             @Override
                             public void onNext(@io.reactivex.annotations.NonNull ResponseItem responseItem) {
                                 handleResultWithResultCode(responseItem);
-                                BaseActivity.dismissLoadingDialogByManualState();
+                                XyBaseActivity.dismissLoadingDialogByManualState();
                             }
 
                             @Override
                             public void onError(@io.reactivex.annotations.NonNull Throwable throwable) {
                                 throwable.printStackTrace();
                                 noResponse(call, okResponseListener);
-                                BaseActivity.dismissLoadingDialogByManualState();
+                                XyBaseActivity.dismissLoadingDialogByManualState();
                             }
 
                             @Override
                             public void onComplete() {
-//                                BaseActivity.dismissLoadingDialogByManualState();
+//                                XyBaseActivity.dismissLoadingDialogByManualState();
                             }
                         });
             }
@@ -712,7 +690,7 @@ public class OkHttp {
             @Override
             public void onFailure(Call call, IOException e) {
                 noResponse(call, okResponseListener);
-                BaseActivity.dismissLoadingDialogByManualState();
+                XyBaseActivity.dismissLoadingDialogByManualState();
             }
 
         });
@@ -721,6 +699,8 @@ public class OkHttp {
 
     /**
      * 在主线程中操作返回的JSON
+     * 如果有需要在后台进行计算的操作，可以在 OkResponseListener.handleSuccessInBackground中操作
+     * 如果有大量的计算复杂的操作，可在handleJsonSuccess后用RxJava的Computation线程中操作
      */
     interface IOkResponseListener {
         void handleJsonSuccess(Call call, Response response, JSONObject json) throws Exception;
@@ -734,7 +714,6 @@ public class OkHttp {
             return OkOptions.mediaType;
         }
     }
-
 
     /**
      * okHttp属性设置

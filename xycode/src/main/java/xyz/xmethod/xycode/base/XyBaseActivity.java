@@ -37,37 +37,79 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/1/11 0011.
+ * Created by xiuye on 2016/1/11 0011.
+ * 先继承一个Abstract的类
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class XyBaseActivity extends AppCompatActivity {
 
-    public static final int REQUEST_CODE_GOT_RESULT = 100;
-    public static final int REQUEST_CODE_PHOTO_SELECT = 202;
-    public static final int REQUEST_CODE_MULTI_PHOTO_SELECT = 203;
-    public static final int REQUEST_CODE_GOT_PHONE_NUMBER = 301;
+    public static final int REQUEST_CODE_GOT_RESULT = 1800;
+    /**
+     * 选取图片
+     * 在onPhotoSelectResult()中返回图片Uri
+     */
+    public static final int REQUEST_CODE_PHOTO_SELECT = 2802;
+    private static final int REQUEST_CODE_MULTI_PHOTO_SELECT = 2803;
+    /**
+     * 选取电话号码
+     * Tools.pickNumber()方法取得
+     */
+    public static final int REQUEST_CODE_GOT_PHONE_NUMBER = 3801;
 
+    /**
+     * BaseActivity列表
+     */
     private static List<Activity> activities = new LinkedList<>();
 
+    /**
+     * 加载中对话框
+     */
     private static AlertDialog loadingDialog;
 
-    //    private static AlertDialog loadingDialog;
+    /**
+     * 是否手动取消加载对话框
+     */
     private static boolean loadingDialogShowManual = false;
 
+    /**
+     * 当前Activity的请求列表
+     */
     protected List<CallItem> requestList = new ArrayList<>();
 
+    @Deprecated
     private BroadcastReceiver finishReceiver;
-    private BaseActivity thisActivity;
 
+    /**
+     * 当前页面
+     */
+    private XyBaseActivity thisActivity;
+
+    @Deprecated
     public static final String ACTION_FINISH_ACTIVITY = "FinishBaseActivity";
+
+    /**
+     * 调试信息Layout
+     */
     protected LogLayout logLayout;
 
+    /**
+     * ViewHolder
+     */
     private CustomHolder rootHolder;
+
+    /**
+     * 当前Activity的LayoutId
+     */
     private int activityLayout = 0;
+
+    /**
+     * 第一次onShow
+     */
     private boolean firstShowOnStart = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /* 初始化工作 */
         thisActivity = this;
         addActivity(this);
         activityLayout = setActivityLayout();
@@ -80,10 +122,23 @@ public abstract class BaseActivity extends AppCompatActivity {
         initOnCreate(savedInstanceState);
     }
 
+    /**
+     * 返回Activity的LayoutId
+     * 当不使用时返回0可以在onCreate()中的setContentView中进行设置
+     * @return layoutId
+     */
     protected abstract int setActivityLayout();
 
+    /**
+     * onCreate方法时进行初始化操作
+     * @param savedInstanceState savedInstanceState
+     */
     protected abstract void initOnCreate(Bundle savedInstanceState);
 
+    /**
+     * 在onStart()的时候进行操作
+     * @param firstShow true：第一次OnStart
+     */
     protected void showOnStart(boolean firstShow) {
 
     }
@@ -91,6 +146,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        /*LogLayout显示*/
         if (L.showLog() && logLayout == null) {
             logLayout = LogLayout.attachLogLayoutToActivity(getThis());
         }
@@ -103,6 +159,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        /*停止LogLayout显示*/
         if (logLayout != null) {
             logLayout.removeLayout();
             logLayout = null;
@@ -124,7 +181,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-
+    /**
+     * 在Java中可以直接使用此方法通过Id对控件进行引用
+     * 如果在Kotlin中则可以省略
+     * @return
+     */
     public CustomHolder rootHolder(){
         if (rootHolder == null) {
             rootHolder = new CustomHolder(getWindow().getDecorView().getRootView());
@@ -132,7 +193,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return rootHolder;
     }
 
-    protected BaseActivity getThis() {
+    protected XyBaseActivity getThis() {
         return this;
     }
 
@@ -170,10 +231,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         return loadingDialog != null && loadingDialog.isShowing();
     }
 
+    /**
+     * 显示加载中对话框
+     * 会在OkHttp网络加载完成后被自动关闭
+     */
     public void showLoadingDialog() {
         showDialog(false);
     }
 
+    /**
+     * 显示加载对话框
+     * 不能被自动关闭，需要调用{@link #dismissLoadingDialog()}来关闭
+     */
     public void showLoadingDialogManualDismiss() {
         showDialog(true);
     }
@@ -187,6 +256,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 关闭加载中对话框
+     */
     public static void dismissLoadingDialog() {
         loadingDialogShowManual = false;
         if (loadingDialog != null && loadingDialog.isShowing()) {
@@ -194,6 +266,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 关闭加载中对话框
+     * 只能关闭{@link #showLoadingDialog()}打开的对话框
+     */
     public static void dismissLoadingDialogByManualState() {
         if (!loadingDialogShowManual && loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
@@ -213,6 +289,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
+    /**
+     * 关闭输入法
+     */
     public void hideSoftInput() {
         View view = getWindow().peekDecorView();
         if (view != null) {
@@ -252,28 +331,41 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
 
 
-    public static void addActivity(Activity activity) {
+    /**
+     * 加入Activity引用组中
+     * @param activity
+     */
+    private static void addActivity(Activity activity) {
         if (!activities.contains(activity)) {
             activities.add(activity);
         }
         StringBuilder sb = new StringBuilder("addActivity: [");
         for (int i = 0; i < activities.size(); i++) {
-            sb.append(activities.get(i).getClass().getSimpleName()).append(i < activities.size() - 1 ? ", " : "]");
+            sb.append(activities.get(i).getClass().getSimpleName()).append(i < activities.size() - 1 ? ", " : "");
         }
+        sb.append("]");
         L.i(sb.toString());
     }
 
-    public static void removeActivity(Activity activity) {
+    /**
+     * 删除Activity引用组中
+     * @param activity
+     */
+    private static void removeActivity(Activity activity) {
         if (activities.contains(activity)) {
             activities.remove(activity);
         }
         StringBuilder sb = new StringBuilder("removeActivity: [");
         for (int i = 0; i < activities.size(); i++) {
-            sb.append(activities.get(i).getClass().getSimpleName()).append(i < activities.size() - 1 ? ", " : "]");
+            sb.append(activities.get(i).getClass().getSimpleName()).append(i < activities.size() - 1 ? ", " : "");
         }
+        sb.append("]");
         L.i(sb.toString());
     }
 
+    /**
+     * 关闭所有activities中的页面
+     */
     public static void finishAllActivity() {
         for (final Activity activity : activities) {
             if (activity != null) {
@@ -284,6 +376,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 关闭应该
+     */
     public static void exitApplication() {
         finishAllActivity();
         android.os.Process.killProcess(android.os.Process.myPid());
@@ -291,7 +386,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * judge a activity is on foreground
-     *
+     * 判断是否当前页面
      * @param activity
      */
     public static boolean isForeground(Activity activity) {
@@ -309,6 +404,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * 取得当前页面
+     * @param context
+     * @return
+     */
     public static Activity getForegroundActivity(Context context) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(1);
@@ -325,6 +425,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         return null;
     }
 
+    /**
+     * 取得className相同的第一个页面
+     * @param className
+     * @return
+     */
     public static Activity getActivityByClassName(String className) {
         for (Activity activity : activities) {
             if (activity.getClass().getName().contains(className)) {
@@ -337,11 +442,22 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * EventBus
+     * 设置是否使用EventBus
+     * 已内置，推荐使用
+     */
+
+    /**
+     * 当前页面是否注册EventBus
+     * @return
      */
     protected boolean useEventBus() {
-        return logLayout != null;
+        return false;
     }
 
+    /**
+     * Post EventBus事件
+     * @param eventName
+     */
     public void postEvent(String eventName) {
         postEvent(eventName, null, null);
     }
@@ -362,13 +478,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         EventBus.getDefault().post(new MsgEvent(eventName, object, feedBack));
     }
 
+    /**
+     * 在主线程中执行EventBus返回的事件
+     * @param event
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(MsgEvent event) {
-        if (logLayout != null && event.getEventName().equals(L.EVENT_LOG)) {
-            logLayout.refreshData();
-        }
     }
 
+    /**
+     * 在后台线程中执行EventBus返回的事件
+     * @param event
+     */
     @Subscribe
     public void onEventBackground(MsgEvent event) {
 
@@ -376,11 +497,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * okHttp request
+     * 在当前Activity中执行OkHttp请求
      */
     public CallItem newCall() {
-        CallItem call = OkHttp.newCall(getThis());
-        requestList.add(call);
-        return call;
+        CallItem callItem = OkHttp.newCall(getThis());
+        requestList.add(callItem);
+        return callItem;
     }
 
     /**
@@ -393,20 +515,31 @@ public abstract class BaseActivity extends AppCompatActivity {
         Uri uri = null;
         if (data != null) {
             uri = data.getData();
+            if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_PHOTO_SELECT) {
+                onPhotoSelectResult( uri);
+            }
         }
-        onPhotoSelectResult(resultCode, uri);
     }
 
-    protected void onPhotoSelectResult(int resultCode, Uri uri) {
+    /**
+     * 直接处理返回的图片选择Uri
+     * 只有返回内容时才会被调用且
+     * requestCode == REQUEST_CODE_PHOTO_SELECT
+     * @param uri
+     */
+    protected void onPhotoSelectResult(Uri uri) {
 
     }
 
+    /**
+     * 加载中的对话框
+     * @return null：则不使用对话框
+     */
     protected abstract AlertDialog setLoadingDialog();
 
     public AlertDialog getLoadingDialog() {
         return loadingDialog;
     }
-
 
     protected interface WindowMode {
         // 输入适应
