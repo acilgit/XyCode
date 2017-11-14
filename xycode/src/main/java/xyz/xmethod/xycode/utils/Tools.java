@@ -60,7 +60,6 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
-
 /**
  * Utils
  * Created by Administrator on 2014/7/27.
@@ -68,14 +67,10 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class Tools {
 
-//    public static final String CACHE_DIR = Environment.getExternalStorageDirectory()+"";
-
-    private static File currentPhotoFile;
-
+    /**
+     * Tools实例
+     */
     private static Tools instance = null;
-
-//    private static int ScreenWidth = 0;
-//    private static Point screenSize = null;
 
     private static AtomicInteger atomicCounter = new AtomicInteger(0);
 
@@ -218,6 +213,14 @@ public class Tools {
         return filename;
     }
 
+    /**
+     * 从文件名中取得宽高比
+     * 如果文件名中带有宽高信息则可以使用
+     * @param filename
+     * @param mark
+     * @param splitter
+     * @return
+     */
     public static WH getWidthHeightFromFilename(String filename, String mark, String splitter) {
         int h = 0, w = 500;
         try {
@@ -877,7 +880,7 @@ public class Tools {
         }
     }
 
-    public static List<StringData> getStringDataList(List list, Interfaces.OnUrlData onStringData) {
+    public static List<StringData> getStringDataList(List list, Interfaces.OnStringData onStringData) {
         ArrayList<StringData> dataList = new ArrayList<>();
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {

@@ -12,11 +12,28 @@ import java.util.UUID;
 
 public class DebugItem {
 
+    /**
+     * 请求地址
+     */
     private String url;
+    /**
+     * 请求结果
+     */
     private String json;
+
+    /**
+     * 编辑后的请求结果
+     */
     private String jsonModify;
+
+    /**
+     * Debug Key
+     */
     private String key;
 
+    /**
+     * 参数
+     */
     private Param param;
 
     /**
@@ -36,11 +53,6 @@ public class DebugItem {
     public DebugItem(String url) {
         this.url = url;
     }
-
-   /* public DebugItem(String url, String json) {
-        this.url = url;
-        this.json = json;
-    }*/
 
     public String getKey() {
         if (key == null) {

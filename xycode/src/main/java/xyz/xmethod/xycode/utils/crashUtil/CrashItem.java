@@ -2,18 +2,66 @@ package xyz.xmethod.xycode.utils.crashUtil;
 
 /**
  * Created by XY on 2017-06-05.
+ *
  */
 public class CrashItem {
+
+    /**
+     * 版本名称
+     */
     private String versionName;
+
+    /**
+     * 内部版本号
+     */
     private int versionCode;
+
+    /**
+     * android版本号
+     */
     private String release;
+
+    /**
+     * 手机SDK版本
+     */
     private int sdk;
+
+    /**
+     * 手机厂商
+     */
     private String manufacturer;
+
+    /**
+     * 手机型号
+     */
     private String model;
+
+    /**
+     * 错误信息
+     */
     private String errorMsg;
+
+    /**
+     * 错误标题
+     */
     private String errorMsgTitle;
+
+    /**
+     * id
+     * 可编辑
+     */
     private String id;
+
+    /**
+     * 用户
+     * 可编辑
+     */
     private String user;
+
+    /**
+     * 标记
+     * 可编辑
+     */
     private String mark;
 
     public CrashItem() {

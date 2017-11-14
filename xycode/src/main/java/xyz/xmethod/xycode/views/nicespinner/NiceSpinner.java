@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import xyz.xmethod.xycode.R;
 import xyz.xmethod.xycode.interfaces.Interfaces;
@@ -247,7 +246,7 @@ public class NiceSpinner<T> extends android.support.v7.widget.AppCompatTextView 
         this.onItemSelectedListener = onItemSelectedListener;
     }
 
-    public void setDataList(@NonNull List list, Interfaces.OnUrlData<T> onStringData) {
+    public void setDataList(@NonNull List list, Interfaces.OnStringData<T> onStringData) {
         setAttachDataSource(list, onStringData);
     }
 
@@ -255,7 +254,7 @@ public class NiceSpinner<T> extends android.support.v7.widget.AppCompatTextView 
         setAttachDataSource(dataSet, null);
     }
 
-    private void setAttachDataSource(@NonNull List dataSet, Interfaces.OnUrlData<T> onStringData) {
+    private void setAttachDataSource(@NonNull List dataSet, Interfaces.OnStringData<T> onStringData) {
         if (dataSet.size() > 0) {
             if (dataSet.get(0) instanceof StringData) {
                 adapter = new NiceSpinnerAdapter(getContext(), dataSet, textColor, backgroundSelector);

@@ -5,13 +5,39 @@ package xyz.xmethod.xycode.utils.LogUtil;
  */
 public class LogItem {
 
+    /**
+     * 白色显示关键内容
+     */
     public static final int LOG_TYPE_E = 0;
+
+    /**
+     * 红色显示崩溃内容
+     */
     public static final int LOG_TYPE_CRASH = 1;
+
+    /**
+     * 灰色展示普通内容
+     */
     public static final int LOG_TYPE_I = 2;
+
+    /**
+     * 蓝色色显示特殊内容
+     */
     public static final int LOG_TYPE_D = 3;
 
+    /**
+     * Log 时间
+     */
     private String dateTime;
+
+    /**
+     * Log 标题
+     */
     private String title;
+
+    /**
+     * Log 内容
+     */
     private String content;
     /**
      * 0: e         white

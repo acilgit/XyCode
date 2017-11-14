@@ -12,8 +12,9 @@ import xyz.xmethod.xycode.Xy;
 /**
  * Toast
  *
- * @author way
+ * @author XiuYe
  * invoke Xy.init() first init Application
+ * Show中的Object参数可以控制Toast的显示不同的图片或者格式以适应不同的需求
  */
 public class TS {
 

@@ -8,7 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * Created by XY on 2016-08-09.
+ * Created by XiuYe on 2016-08-09.
+ *
  */
 public abstract class BaseTabItems {
 
@@ -17,48 +18,11 @@ public abstract class BaseTabItems {
     protected int layoutId;
     protected int textViewId;
     protected int imageViewId;
-//    protected int tabIconsNormalArrayId;
-//    protected int tabIconsSelectedArrayId;
     protected String[] titles;
     protected int[] iconsNormal;
     protected int[] iconsSelected;
-//    protected TypedArray tabIconsNormal;
-//    protected TypedArray tabIconsSelected;
     protected int selectedTextColor = 0;
     protected int normalTextColor = 0;
-
-/*     public BaseTabItems(Context context, TabLayout tabMain, int layoutId, int textViewId, int imageViewId, int titlesStringArrayId, int tabIconsNormalArrayId, int tabIconsSelectedArrayId, int selectedTextColor, int normalTextColor) {
-        String[] titles = context.getResources().getStringArray(titlesStringArrayId);
-         this.context = context;
-         this.tabMain = tabMain;
-         this.layoutId = layoutId;
-         this.imageViewId = imageViewId;
-         this.textViewId = textViewId;
-//         this.tabIconsNormalArrayId = tabIconsNormalArrayId;
-//         this.tabIconsSelectedArrayId = tabIconsSelectedArrayId;
-         this.titles = titles;
-         this.selectedTextColor = selectedTextColor;
-         this.normalTextColor = normalTextColor;
-         this.tabIconsNormal = context.getResources().obtainTypedArray(this.tabIconsNormalArrayId);
-         this.tabIconsSelected = context.getResources().obtainTypedArray(this.tabIconsSelectedArrayId);
-         setupTabIcons();
-    }*/
-
-/*    public BaseTabItems(Context context, TabLayout tabMain, int layoutId, int textViewId, int imageViewId, String[] titles, int tabIconsNormalArrayId, int tabIconsSelectedArrayId, int selectedTextColor, int normalTextColor) {
-        this.context = context;
-        this.tabMain = tabMain;
-        this.layoutId = layoutId;
-        this.imageViewId = imageViewId;
-        this.textViewId = textViewId;
-        this.tabIconsNormalArrayId = tabIconsNormalArrayId;
-        this.tabIconsSelectedArrayId = tabIconsSelectedArrayId;
-        this.titles = titles;
-        this.selectedTextColor = selectedTextColor;
-        this.normalTextColor = normalTextColor;
-        this.tabIconsNormal = context.getResources().obtainTypedArray(this.tabIconsNormalArrayId);
-        this.tabIconsSelected = context.getResources().obtainTypedArray(this.tabIconsSelectedArrayId);
-        setupTabIcons();
-    }*/
 
     public BaseTabItems(Context context, TabLayout tabMain, int layoutId, int textViewId, int imageViewId, String[] titles, int[] tabIconsNormalId, int[] tabIconsSelectedId, int selectedTextColor, int normalTextColor) {
         this.context = context;

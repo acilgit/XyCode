@@ -257,8 +257,8 @@ public abstract class BaseItemView extends RelativeLayout {
     public BaseItemView setImageUrl(int viewId, Object urlObject, Object resizeOptions) {
         View view = getView(viewId);
         if (view != null && view instanceof ImageView) {
-            if (Xy.getOption().getiSetImageUrlMethod() != null) {
-                Xy.getOption().getiSetImageUrlMethod().setImageUrl((ImageView) view, urlObject, resizeOptions);
+            if (Xy.getOption().getImageUrlSetter() != null) {
+                Xy.getOption().getImageUrlSetter().setImageUrl((ImageView) view, urlObject, resizeOptions);
             }
         }
         return this;

@@ -8,21 +8,24 @@ import java.io.Serializable;
 public class Interfaces {
 
     @FunctionalInterface
-    public interface OnUrlData<T> extends Serializable{
+    public interface OnStringData<T> extends Serializable{
         String getDataString(T data);
     }
 
-    public interface OnCommitListener<T> extends Serializable{
-        void onCommit(T obj);
-
-        void onCancel(T obj);
-    }
-
+    /**
+     * 回调接口
+     * @param <T>
+     */
     @FunctionalInterface
     public interface CB<T> extends Serializable{
         void go(T obj);
     }
 
+    /**
+     * 回调并反馈接口
+     * @param <T>
+     * @param <Y>
+     */
     @FunctionalInterface
     public interface FeedBack<T, Y> extends Serializable{
         Y go(T obj);

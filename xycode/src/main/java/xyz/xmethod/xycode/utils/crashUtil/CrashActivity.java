@@ -23,19 +23,49 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
+/**
+ * Created by XiuYe on 2017-06-05.
+ * 崩溃处理页面
+ * 建议在测试版的时候加入，正式版的时候可以使用Service直接重启应用
+ */
 public class CrashActivity extends AppCompatActivity {
 
+    /**
+     * 崩溃页面展示
+     */
     public static ICrash iCrash;
+
+    /**
+     * 取得CrashItem后进行处理，可发到后台或者本地持久化等
+     */
     public static Interfaces.CB<CrashItem> cb;
+
     public static final String MSG = "msg";
     public static final String CRASH_LOG = "crashLog";
 
+    /**
+     * LogLayout
+     */
     private LogLayout logLayout;
+
+    /**
+     * CrashItem
+     */
     private CrashItem crashItem;
+
+    /**
+     * 错误信息
+     */
     protected String errorMsg;
 
+    /**
+     * 当前页面实例
+     */
     private static CrashActivity instance;
 
+    /**
+     * 获取当前页面实例
+     */
     public static CrashActivity getInstance() {
         return instance;
     }
@@ -44,16 +74,22 @@ public class CrashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CrashActivity.instance = this;
-        String json = Xy.getStorage(Xy.getContext()).getString(CRASH_LOG);
+        /* 取得用户最近操作及网络请求记录 */
+        String json = Xy.getStorage().getString(CRASH_LOG);
         List<LogItem> logItems = JSON.parseArray(json, LogItem.class);
         L.setLogList(logItems);
         errorMsg = getIntent().getStringExtra(MSG);
 
+        /* 初始化页面内容 */
         initViews();
     }
 
+    /**
+     * 初始化页面内容
+     */
     private void initViews() {
         crashItem = getCrashItem(errorMsg);
+        /* 处理回调 */
         if (cb != null) {
             cb.go(crashItem);
         }
@@ -80,12 +116,18 @@ public class CrashActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     * @param catchErrorCallback 返回true则执行相关操作，否则直接关闭程序
+     */
     public static void setCrashOperation(Interfaces.CB<CrashItem> catchErrorCallback) {
         setCrashOperation( catchErrorCallback, null);
     }
 
     /**
+     * 使用此方法打开CrashActivity
      * @param catchErrorCallback 返回true则执行相关操作，否则直接关闭程序
+     * @param iCrash    Null时则使用默认页面布局
      */
     public static void setCrashOperation(Interfaces.CB<CrashItem> catchErrorCallback, ICrash iCrash) {
         CrashActivity.cb = catchErrorCallback;
@@ -107,18 +149,23 @@ public class CrashActivity extends AppCompatActivity {
             }
             ex.printStackTrace();
             String jsonString = JSON.toJSONString(L.getLogList());
-            if (Xy.getStorage(Xy.getContext()).getEditor().putString(CRASH_LOG, jsonString).commit()) {
+            if (Xy.getStorage().getEditor().putString(CRASH_LOG, jsonString).commit()) {
                 Intent intent = new Intent(Xy.getContext(), CrashActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(CrashActivity.MSG, info);
                 Xy.getContext().startActivity(intent);
-                // 杀死该应用进程
+                /* 杀死该应用进程 */
                 XyBaseActivity.exitApplication();
             }
 
         });
     }
 
+    /**
+     * 获得报错信息
+     * @param errorMsg
+     * @return
+     */
     public CrashItem getCrashItem(String errorMsg) {
         CrashItem crashItem = null;
         try {

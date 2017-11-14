@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 
-public abstract class BaseLazyFragment extends Fragment {
+public abstract class XyBaseFragment extends Fragment {
 
     boolean loaded = false;
     private boolean loadFailed = false;
@@ -29,7 +29,6 @@ public abstract class BaseLazyFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loaded = false;
     }
 
     @Override
@@ -123,38 +122,14 @@ public abstract class BaseLazyFragment extends Fragment {
             return;
         }
 
-        RelativeLayout rl = new RelativeLayout(getContext());
-        RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-/*
-        SimpleDraweeView siv = new SimpleDraweeView(getContext());
-        siv.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FIT_XY);
-        siv.setAspectRatio(1);
-        int side = Tools.dp2px(24);
-        RelativeLayout.LayoutParams ivParam = new RelativeLayout.LayoutParams(side, side);
-        ivParam.addRule(RelativeLayout.CENTER_IN_PARENT);
-        siv.setImageURI(ImageUtils.getResUri(R.mipmap.loading));
-        rl.addView(siv, ivParam);
-        ((ViewGroup) getView()).addView(rl, param);
-        RotateAnimation animation = new RotateAnimation(0, 359, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        LinearInterpolator lin = new LinearInterpolator();
-        animation.setInterpolator(lin);
-        siv.setAnimation(animation);
-        animation.start();*/
-
         if (useEventBus()) {
             EventBus.getDefault().register(this);
         }
         onFirstShow();
         loaded = true;
-//        siv.clearAnimation();
-        ((ViewGroup) getView()).removeView(rl);
     }
 
     protected abstract void onFirstShow();
-
-  /*  protected ViewStub getViewStub() {
-        return (ViewStub)getView().findViewById(R.id.viewStub);
-    }*/
 
 
 }

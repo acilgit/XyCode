@@ -30,22 +30,53 @@ import java.util.List;
 public class L {
     public static final String SHOW_LOG = "SHOW_LOG_FOR_XY";
     public static final String EVENT_LOG = "EVENT_LOG";
+
     /**
      * -1时不限数量
      */
     private static int MAX_LOG_LIST_SIZE_IN_RELEASE_MODE = 30;
 
+    /**
+     * 打印Log
+     */
     private static boolean showLog = true;
+
+    /**
+     * Tag
+     */
     private static String TAG = " Debug ";
+
+    /**
+     * 是否支持打印长内容
+     */
     private static boolean isLong = true;
+
+    /**
+     * 输出文件
+     * 暂时没用
+     */
     private static File outputFile = null;
 
+    /**
+     * 输出文件目录
+     * 暂时没用
+     */
     private static String LOG_DIR;
+
+    /**
+     * 输出文件名
+     * 暂时没用
+     */
     private static final String LOG_NAME = "CrashLog.txt";
 
-    // Log的输出List
+    /**
+     * Log的输出List
+     */
     private static List<LogItem> logList;
 
+    /**
+     * Log列表
+     */
     public static List<LogItem> getLogList() {
         if (logList == null) {
             logList = new ArrayList<>();
@@ -53,18 +84,30 @@ public class L {
         return logList;
     }
 
+    /**
+     * 设置Log列表
+     */
     public static void setLogList(List<LogItem> logList) {
         L.logList = logList;
     }
 
+    /**
+     * 添加LogItem
+     */
     public static void addLogItem(String msg) {
         addLogItem(null, msg, LogItem.LOG_TYPE_E);
     }
 
+    /**
+     * 添加LogItem
+     */
     public static void addLogItem(String title, String msg) {
         addLogItem(title, msg, LogItem.LOG_TYPE_E);
     }
 
+    /**
+     * 添加LogItem
+     */
     public static void addLogItem(String title, String msg, int type) {
         String addTitle = "", addMsg = "";
         if(title != null) addTitle = new String(title);
@@ -78,7 +121,7 @@ public class L {
 
     public static void setShowLog(boolean showLog) {
         L.showLog = showLog;
-        Xy.getStorage(Xy.getContext()).getEditor().putBoolean(SHOW_LOG, showLog).commit();
+        Xy.getStorage().getEditor().putBoolean(SHOW_LOG, showLog).commit();
     }
 
     public static boolean showLog() {
@@ -134,6 +177,11 @@ public class L {
         addLogItem(title, msg);
     }
 
+    /**
+     * Crash Log 的展示
+     * @param title
+     * @param e
+     */
     public static void crash(String title, Exception e) {
         StringBuffer sb = new StringBuffer();
         for (StackTraceElement traceElement : e.getStackTrace()) {

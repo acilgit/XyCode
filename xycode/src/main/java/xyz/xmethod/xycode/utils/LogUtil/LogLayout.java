@@ -27,20 +27,50 @@ import java.util.List;
 
 /**
  * Created by XY on 2017-06-03.
- * 在Debug模式下，用于显示Log的内容
+ * 用于显示Log的内容
  * 在屏幕右边滑动展开，展开后右滑隐藏
+ *
+ * 在Debug模式下，可以进行OkHttp请求调试
  *
  * @author xiuye
  */
 
 public class LogLayout {
 
+    /**
+     * Context
+     */
     private final Context context;
+
+    /**
+     * RootView
+     */
     private RelativeLayout rootView;
+
+    /**
+     * Log适配器
+     */
     private XAdapter<LogItem> adapter;
+
+    /**
+     * 屏幕宽
+     */
     private int screenWidth;
+
+    /**
+     * 屏幕高
+     */
     private int screenHeight;
+
+    /**
+     * Holder
+     */
     private CustomHolder holder;
+
+    /**
+     * 被选择的Item Position
+     * 没被选中的Item只会显示部分内容
+     */
     private int selectItemPos = -1;
 
     /**
@@ -48,7 +78,14 @@ public class LogLayout {
      */
     private boolean showing = false;
 
+    /**
+     * 最小滑动距离
+     */
     private static int miniSlideWidth = 40;
+
+    /**
+     * 没被选中的Item最长内容展示长度
+     */
     private static final int maxItemContentLength = 400;
 
     @SuppressLint("HandlerLeak")
@@ -74,7 +111,9 @@ public class LogLayout {
         rootView = (RelativeLayout) LayoutInflater.from(context).inflate(xyz.xmethod.xycode.R.layout.layout_base_console_view, null);
         rootView.setOnTouchListener(rootViewTouchListener);
         holder = new CustomHolder(rootView);
+        /* 设置滑动监听 */
         holder.getView(R.id.vTouch).setOnTouchListener(slideBackTouchListener);
+        /* Log适配器 */
         adapter = new XAdapter<LogItem>(context, () -> L.getLogList()) {
             @Override
             protected ViewTypeUnit getViewTypeUnitForLayout(LogItem item) {
@@ -92,6 +131,7 @@ public class LogLayout {
             @Override
             public void bindingHolder(CustomHolder holder, List<LogItem> dataList, int pos) {
                 LogItem item = dataList.get(pos);
+                /* 设置展示颜色 */
                 int contentColor;
                 switch (item.getType()) {
                     case LogItem.LOG_TYPE_CRASH:
@@ -107,15 +147,16 @@ public class LogLayout {
                         contentColor = android.R.color.white;
                         break;
                 }
+                /* 设置内容 */
                 String content = (selectItemPos != pos && item.getContent().length() > maxItemContentLength) ? item.getContent().substring(0, maxItemContentLength) : item.getContent();
-                holder.setText(R.id.tvDateTime, item.getDateTime() + " [" + (pos + 1) + "]")
-                        .setText(R.id.tvTitle, item.getTitle())
-                        .setVisibility(R.id.tvTitle, TextUtils.isEmpty(item.getTitle()) ? View.GONE : View.VISIBLE)
-                        .setVisibility(R.id.tvContent, TextUtils.isEmpty(item.getContent()) ? View.GONE : View.VISIBLE)
-                        .setText(R.id.tvContent, content)
-                        .setTextColor(R.id.tvContent, context.getResources().getColor(contentColor))
-                        .setViewBackground(R.id.llItem, OkHttp.isDebugMode() ? R.color.transparentRedLite : 0);
-                holder.getView(R.id.llBg).setBackgroundResource((selectItemPos != pos && item.getContent().length() > maxItemContentLength) ? R.color.bgBlue : 0);
+                holder.setText(R.id.tvDateTime, item.getDateTime() + " [" + (pos + 1) + "]")    /* 时间 */
+                        .setText(R.id.tvTitle, item.getTitle()) /* 标题 */
+                        .setVisibility(R.id.tvTitle, TextUtils.isEmpty(item.getTitle()) ? View.GONE : View.VISIBLE) /* 标题是否可见 */
+                        .setVisibility(R.id.tvContent, TextUtils.isEmpty(item.getContent()) ? View.GONE : View.VISIBLE) /* 内容是否可见 */
+                        .setText(R.id.tvContent, content)   /* 内容 */
+                        .setTextColor(R.id.tvContent, context.getResources().getColor(contentColor))    /* 内容颜色 */
+                        .setViewBackground(R.id.llItem, OkHttp.isDebugMode() ? R.color.transparentRedLite : 0); /* 调式模式下的颜色 */
+                holder.getView(R.id.llBg).setBackgroundResource((selectItemPos != pos && item.getContent().length() > maxItemContentLength) ? R.color.bgBlue : 0);  /* 选中的内容背景颜色 */
             }
         };
 
@@ -152,6 +193,9 @@ public class LogLayout {
         return rootView;
     }
 
+    /**
+     * 右滑隐藏Layout
+     */
     private View.OnTouchListener slideBackTouchListener = new View.OnTouchListener() {
         boolean touching = false;
         boolean sliding = false;
@@ -207,6 +251,9 @@ public class LogLayout {
         }
     };
 
+    /**
+     * 左滑唤出Layout
+     */
     private View.OnTouchListener rootViewTouchListener = new View.OnTouchListener() {
         boolean touching = false;
         boolean sliding = false;
@@ -228,6 +275,7 @@ public class LogLayout {
                 case MotionEvent.ACTION_MOVE:
                     touching = true;
                     dx = x - downX;
+                    /* 从屏幕右下2/5的地方滑动才可以唤出 */
                     if (downX > screenWidth - miniSlideWidth && dx < 0 && (sliding || y > screenHeight - (screenHeight / (screenWidth > screenHeight ? 2 : 5)))) {
                         sliding = true;
                         slideLayout((int) x);

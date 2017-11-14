@@ -38,6 +38,9 @@ import okhttp3.Response;
 /**
  * Created by XiuYe on 2016/7/7
  * 对 OkHttp3 进行封装
+ *
+ * 网络请求在RxJava的IO线程中进行
+ * 上传文件则使用OkHttp的线程池进行请求
  */
 public class OkHttp {
 
@@ -123,7 +126,7 @@ public class OkHttp {
 
     /**
      * you can use client as you like
-     * when use ali hotfix, set client by this method
+     * when use ali-hotfix, set client by this method
      *
      * @param iOkInit
      * @param client
@@ -145,6 +148,9 @@ public class OkHttp {
         OkHttp.mediaType = mediaType;
     }
 
+    /**
+     * 上传文件的线程池大小
+     */
     public static void setMaxTransFileCount(int max) {
         getClient().dispatcher().setMaxRequestsPerHost(max);
     }

@@ -2,6 +2,7 @@ package xyz.xmethod.xycode.utils.LogUtil;
 
 /**
  * Created by XY on 2017-06-06.
+ * 转化JSON排列
  */
 public class JsonTool {
 
@@ -27,7 +28,7 @@ public class JsonTool {
                 jsonFormat.append(c + "\n");
                 jsonFormat.append(getSpaceOrTab(tabNum));
             } else if (c == ':') {
-                jsonFormat.append(c + " ");
+                jsonFormat.append(c + "");
             } else if (c == '[') {
                 tabNum++;
                 char next = strJson.charAt(i + 1);

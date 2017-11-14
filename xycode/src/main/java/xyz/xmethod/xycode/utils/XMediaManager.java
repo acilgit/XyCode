@@ -6,8 +6,10 @@ import android.media.MediaPlayer;
 
 /**
  * Created by XY on 2015/7/17.
+ * 音频播放工具
  */
 public class XMediaManager {
+
     private static MediaPlayer mediaPlayer;
     private static boolean isPause = true;
 

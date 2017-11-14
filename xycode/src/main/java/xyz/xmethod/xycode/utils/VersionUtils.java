@@ -5,10 +5,16 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 /**
- * Created by Administrator on 2016/3/14 0014.
+ * Created by XiuYe on 2016/3/14 0014.
  * invoke Xy.init() first init Application
  */
 public class VersionUtils {
+
+    /**
+     * 获取版本号
+     * @param context
+     * @return
+     */
     public static String getVersionName(Context context){
         String versionName = "";
         PackageManager pm = context.getPackageManager();
@@ -21,6 +27,12 @@ public class VersionUtils {
         }
         return versionName;
     }
+
+    /**
+     * 获取内部版本号
+     * @param context
+     * @return
+     */
     public static int getVersionCode(Context context){
         int versionCode = 0 ;
         PackageManager pm = context.getPackageManager();

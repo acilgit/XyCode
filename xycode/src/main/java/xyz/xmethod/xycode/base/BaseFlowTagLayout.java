@@ -23,7 +23,9 @@ import xyz.xmethod.xycode.annotation.annotationHelper.StateBinder;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Edit by XiuYe
+ */
 public abstract class BaseFlowTagLayout extends ViewGroup {
 
     private static final String TAG = BaseFlowTagLayout.class.getSimpleName();
@@ -46,16 +48,6 @@ public abstract class BaseFlowTagLayout extends ViewGroup {
 
     @SaveState
     protected int tagType;
-
-    /**
-     * Should be used by subclasses to listen to changes in the dataset
-     */
-//    AdapterDataSetObserver mDataSetObserver;
-
-    /**
-     * The adapter containing the data to be displayed by this view
-     */
-//    ListAdapter mAdapter;
 
     /**
      * the tag click event callback
@@ -197,19 +189,6 @@ public abstract class BaseFlowTagLayout extends ViewGroup {
         return new MarginLayoutParams(getContext(), attrs);
     }
 
-/*    class AdapterDataSetObserver extends DataSetObserver {
-        @Override
-        public void onChanged() {
-            super.onChanged();
-            reloadData();
-        }
-
-        @Override
-        public void onInvalidated() {
-            super.onInvalidated();
-        }
-    }*/
-
     protected abstract View bindChildView(View contentView, List list, int position);
 
     protected abstract int getLayoutId();
@@ -252,9 +231,6 @@ public abstract class BaseFlowTagLayout extends ViewGroup {
                                 childView.setSelected(false);
                                 if (onTagSelectListener != null) {
                                     onTagSelectListener.onItemSelected(viewList, dataList, checkedTagArray, j);
-//                                    for (int i = 0; i < checkedTagArray.size(); i++) {
-//                                        onTagSelectListener.onItemSelected(viewList.get(i), dataList, i, checkedTagArray.get(i));
-//                                    }
                                 }
                                 return;
                             }
@@ -268,9 +244,6 @@ public abstract class BaseFlowTagLayout extends ViewGroup {
 
                             if (onTagSelectListener != null) {
                                 onTagSelectListener.onItemSelected(viewList, dataList, checkedTagArray, j);
-//                                for (int i = 0; i < checkedTagArray.size(); i++) {
-//                                    onTagSelectListener.onItemSelected(viewList.get(i), dataList, i, checkedTagArray.get(i));
-//                                }
                             }
                             break;
                         case FLOW_TAG_CHECKED_MULTI:
@@ -282,13 +255,6 @@ public abstract class BaseFlowTagLayout extends ViewGroup {
                                 childView.setSelected(true);
                             }
                             if (onTagSelectListener != null) {
-                              /*  List<Integer> list = new ArrayList<>();
-                                for (int k = 0; k < dataList.size(); k++) {
-                                    if (checkedTagArray.get(k)) {
-                                        list.add(k);
-                                    }
-                                    onTagSelectListener.onItemSelected(viewList.get(k), dataList, k, checkedTagArray.get(k));
-                                }   */
                                 onTagSelectListener.onItemSelected(viewList, dataList, checkedTagArray, j);
                             }
                             break;
@@ -324,24 +290,6 @@ public abstract class BaseFlowTagLayout extends ViewGroup {
         super.onRestoreInstanceState(state);
     }
 
-    /**
-     *
-     * @param adapter
-     */
-  /*  public void setAdapter(ListAdapter adapter) {
-        if (mAdapter != null && mDataSetObserver != null) {
-            mAdapter.unregisterDataSetObserver(mDataSetObserver);
-        }
-
-            viewList.clear();
-        removeAllViews();
-        mAdapter = adapter;
-
-        if (mAdapter != null) {
-            mDataSetObserver = new AdapterDataSetObserver();
-            mAdapter.registerDataSetObserver(mDataSetObserver);
-        }
-    }*/
     /**
      *
      * @return

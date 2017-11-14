@@ -7,7 +7,8 @@ import java.io.File;
 import java.math.BigDecimal;
 
 /**
- * Created by Administrator on 2016/10/18 0018.
+ * Created by Xy on 2016/10/18 0018.
+ * 缓存清理工具
  */
 
 public class CacheUtils {

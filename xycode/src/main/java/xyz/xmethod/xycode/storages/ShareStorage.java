@@ -1,4 +1,4 @@
-package xyz.xmethod.xycode.utils;
+package xyz.xmethod.xycode.storages;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,20 +7,23 @@ import android.support.annotation.NonNull;
 import xyz.xmethod.xycode.Xy;
 
 /**
- * Created by XY on 2016-07-27.
- *
+ * Created by XiuYe on 2016-07-27.
+ * 持久化类
  */
 public class ShareStorage {
 
+    /**
+     * SharedPreferences
+     */
     private SharedPreferences storage;
-    SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
+
+    /**
+     * SP变更监听
+     */
+    private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
 
     public ShareStorage(@NonNull String preferenceName) {
         storage = Xy.getContext().getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
-    }
-
-    public ShareStorage(Context context, @NonNull String preferenceName) {
-        storage = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
     }
 
     public void setStorageOnChangeListener(SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
