@@ -18,7 +18,7 @@ import xyz.xmethod.xycode.Xy;
 import xyz.xmethod.xycode.base.BaseItemView;
 import xyz.xmethod.xycode.interfaces.Interfaces;
 import xyz.xmethod.xycode.utils.DateUtils;
-import xyz.xmethod.xycode.utils.LogUtil.L;
+import xyz.xmethod.xycode.debugHelper.logHelper.L;
 import xyz.xmethod.xycode.views.nicespinner.NiceSpinner;
 
 

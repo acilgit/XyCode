@@ -1,4 +1,4 @@
-package xyz.xmethod.xycode.utils.serverApiHelper;
+package xyz.xmethod.xycode.serverApiHelper;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,32 +10,39 @@ import android.widget.TextView;
 
 import xyz.xmethod.xycode.R;
 import xyz.xmethod.xycode.Xy;
-import xyz.xmethod.xycode.utils.LogUtil.L;
+import xyz.xmethod.xycode.debugHelper.logHelper.L;
 
 /**
+ * Created by XY on 2017-06-03.
  * 服务器地址摄制页面
- * Release 版本不可调用此页面
+ * 并且可控制Log的开关
+ *
+ * Release版本无法调用此页面
  */
 public class ServerControllerActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private static ServerControllerActivity instance;
+    /**
+     * ApiHelper实例
+     */
     private static ApiHelper api;
+    /**
+     * 当前服务器地址
+     */
     private TextView tvServer;
+    /**
+     * Log开关
+     */
     private Switch swLog;
 
     /**
-     * 启动登陆界面，启动时清空当前栈里的activity
+     * 打开服务器地址控制器
      *
+     * @param activity
      * @param api
      */
     public static void startThis(Activity activity, ApiHelper api) {
-        if (!Xy.isRelease() && instance == null && api != null) {
+        if (!Xy.isRelease() && api != null) {
             ServerControllerActivity.api = api;
-//            Intent intent = new Intent();
-//            intent.setClass(activity, ServerControllerActivity.class);
-//        if (!(context instanceof Activity))
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(new Intent(activity, ServerControllerActivity.class));
         }
     }
@@ -48,10 +55,12 @@ public class ServerControllerActivity extends AppCompatActivity implements View.
             return;
         }
         setContentView(R.layout.activity_server_controller);
-        instance = this;
         initViews();
     }
 
+    /**
+     * 初始化界面
+     */
     private void initViews() {
         tvServer = (TextView) findViewById(R.id.tvServer);
         swLog = (Switch) findViewById(R.id.swLog);
@@ -68,12 +77,13 @@ public class ServerControllerActivity extends AppCompatActivity implements View.
          findViewById(R.id.btnOptionServer).setOnClickListener(this);
          findViewById(R.id.tvClose).setOnClickListener(this);
 
-        swLog.setChecked(Xy.getStorage(Xy.getContext()).getBoolean(L.SHOW_LOG, false));
-        swLog.setOnCheckedChangeListener((buttonView, isChecked) -> Xy.getStorage(Xy.getContext()).put(L.SHOW_LOG, isChecked));
+        swLog.setChecked(Xy.getStorage().getBoolean(L.SHOW_LOG, false));
+        swLog.setOnCheckedChangeListener((buttonView, isChecked) -> Xy.getStorage().put(L.SHOW_LOG, isChecked));
     }
 
-
-
+    /**
+     *
+     */
     public static ApiHelper getApi() {
         return api;
     }
@@ -100,7 +110,6 @@ public class ServerControllerActivity extends AppCompatActivity implements View.
 
     @Override
     protected void onDestroy() {
-        instance = null;
         api = null;
         super.onDestroy();
     }

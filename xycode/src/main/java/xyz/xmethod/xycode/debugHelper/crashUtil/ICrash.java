@@ -1,4 +1,4 @@
-package xyz.xmethod.xycode.utils.crashUtil;
+package xyz.xmethod.xycode.debugHelper.crashUtil;
 
 import android.support.annotation.LayoutRes;
 

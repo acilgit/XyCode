@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="xyz.xmethod.xycode.utils.crashUtil.CrashActivity">
+    tools:context=".debugHelper.crashUtil.CrashActivity">
 
     <TextView
         android:text="程序运行中出现了下面的状况，请向我们反映，感谢！"

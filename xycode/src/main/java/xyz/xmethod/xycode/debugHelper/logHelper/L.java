@@ -1,4 +1,4 @@
-package xyz.xmethod.xycode.utils.LogUtil;
+package xyz.xmethod.xycode.debugHelper.logHelper;
 
 import android.content.Context;
 import android.text.TextUtils;

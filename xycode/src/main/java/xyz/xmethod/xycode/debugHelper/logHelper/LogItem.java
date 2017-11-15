@@ -1,4 +1,4 @@
-package xyz.xmethod.xycode.utils.LogUtil;
+package xyz.xmethod.xycode.debugHelper.logHelper;
 
 /**
  * Created by XY on 2017-06-09.

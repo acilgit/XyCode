@@ -40,6 +40,7 @@ import xyz.xmethod.xycode.xRefresher.recyclerviewHelper.XLinearLayoutManager;
 /**
  * Created by XiuYe on 2016/6/17.
  * 列表刷新器
+ *
  * XRefresher可以加载Header，并且刷新列表或加载更多内容
  * 所有过程都自动执行
  * 初始化时需要传入XyBaseActivity作网络请求操作

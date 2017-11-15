@@ -1,4 +1,4 @@
-package xyz.xmethod.xycode.utils.crashUtil;
+package xyz.xmethod.xycode.debugHelper.crashUtil;
 
 /**
  * Created by XY on 2017-06-05.

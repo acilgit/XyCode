@@ -1,4 +1,4 @@
-package xyz.xmethod.xycode.utils.serverApiHelper;
+package xyz.xmethod.xycode.serverApiHelper;
 
 import android.text.TextUtils;
 
@@ -10,36 +10,59 @@ import java.util.List;
 
 /**
  * Created by XY on 2017-06-07.
- * 必须重写api()方法，并通过api()调用
- */
-/*
-    public static Api api() {
+ * 须添加api()方法，并通过api()调用接口:
+     public static Api api() {
          if (api == null) {
-            api = new Api();
-         }
-     return (Api) api;
-   }
-*/
+              api = new Api();
+          }
+          return (Api) api;
+     }
+ *
+ * 接口写法：
+ * public final String egApi = getServer("/egApi");
+ * 使用接口：
+ * OkHttp.newCall().url(api().egApi).call()
+ */
 public abstract class ApiHelper {
 
+    /**
+     * ApiHelper实例
+     */
     protected static ApiHelper api;
 
+    /**
+     * 一些静态变量
+     */
     private static final String SERVER = "SERVER";
     private static final String SERVER_LIST = "SERVER_LIST";
 
+    /**
+     * 当前使用的服务器地址
+     */
     private static String server;
 
-    public String getServer() {
+    /**
+     * 取得当前服务器地址
+     * @return
+     */
+    protected String getServer() {
         return getServer(null);
     }
 
-    public String getServer(String apiAddress) {
+    /**
+     * 取得当前接口+服务器地址
+     * @param apiAddress
+     * @return
+     */
+    protected String getServer(String apiAddress) {
         String url = TextUtils.isEmpty(apiAddress) ? "" : apiAddress;
+        /* 如果是正式版，则只取得正式服务器地址 */
         if (Xy.isRelease()) {
             server = getReleaseUrl();
         } else {
+            /* 测试版可以在服务器列表中选择或输入新的服务器地址 */
             if (server == null) {
-                String tempServer = Xy.getStorage(Xy.getContext()).getString(SERVER);
+                String tempServer = Xy.getStorage().getString(SERVER);
                 if (!TextUtils.isEmpty(tempServer)) {
                     server = tempServer;
                     return server + url;
@@ -56,19 +79,27 @@ public abstract class ApiHelper {
      *
      * @param selectedUrl
      */
-    public void setServerUrl(String selectedUrl) {
-        if (Xy.getStorage(Xy.getContext()).getEditor().putString(SERVER, selectedUrl).commit()) {
+    void setServerUrl(String selectedUrl) {
+        if (Xy.getStorage().getEditor().putString(SERVER, selectedUrl).commit()) {
             server = selectedUrl;
             api = null;
         }
     }
 
-    public boolean setStoredServerList(List<String> newServerList) {
-        return (Xy.getStorage(Xy.getContext()).getEditor().putString(SERVER_LIST, JSONArray.toJSONString(newServerList)).commit());
+    /**
+     * 设置服务器地址列表
+     * @param newServerList
+     * @return
+     */
+    boolean setStoredServerList(List<String> newServerList) {
+        return (Xy.getStorage().getEditor().putString(SERVER_LIST, JSONArray.toJSONString(newServerList)).commit());
     }
 
-    public List<String> getStoredServerList() {
-        String listString = Xy.getStorage(Xy.getContext()).getString(SERVER_LIST);
+    /**
+     * 取得服务器地址列表
+     */
+    List<String> getStoredServerList() {
+        String listString = Xy.getStorage().getString(SERVER_LIST);
         List<String> list;
         list = setOptionUrlList(new ArrayList<>());
         if (list == null ) {
@@ -108,7 +139,7 @@ public abstract class ApiHelper {
     /**
      * 其它可选服务器地址
      *
-     * @param serverList
+     * @param serverList 已实例化，可直接add()
      * @return
      */
     protected abstract List<String> setOptionUrlList(List<String> serverList);

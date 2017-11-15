@@ -6,7 +6,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import xyz.xmethod.xycode.interfaces.ImageUrlSetter;
 import xyz.xmethod.xycode.unit.MsgEvent;
-import xyz.xmethod.xycode.utils.LogUtil.L;
+import xyz.xmethod.xycode.debugHelper.logHelper.L;
 import xyz.xmethod.xycode.storages.ShareStorage;
 
 /**

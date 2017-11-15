@@ -29,6 +29,9 @@ public abstract class XyBaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (useEventBus()) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
@@ -122,9 +125,6 @@ public abstract class XyBaseFragment extends Fragment {
             return;
         }
 
-        if (useEventBus()) {
-            EventBus.getDefault().register(this);
-        }
         onFirstShow();
         loaded = true;
     }

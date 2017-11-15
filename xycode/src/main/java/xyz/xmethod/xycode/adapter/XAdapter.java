@@ -21,28 +21,62 @@ import xyz.xmethod.xycode.R;
 import xyz.xmethod.xycode.animation.BaseAnimation;
 import xyz.xmethod.xycode.animation.SlideInBottomAnimation;
 import xyz.xmethod.xycode.unit.ViewTypeUnit;
-import xyz.xmethod.xycode.utils.LogUtil.L;
+import xyz.xmethod.xycode.debugHelper.logHelper.L;
 import xyz.xmethod.xycode.xRefresher.XRefresher;
 
 /**
- * Created by xiu on 2016/4/3.
- *
+ * Created by xiuYe on 2016/4/3.
+ * <p>
+ * Item可以使用不同的Mark加载不同的布局，也可以与RN的ScrollView一样，使用不同的Mark来达到所有Holder不重用，在列表数量大的时候请谨慎使用不重复的Mark
+ * 使用{@link XAdapter#getViewTypeUnitForLayout(Object)}来自定义Holder
+ * 使用{@link XAdapter#bindingHolder(CustomHolder, List, int)} 和{@link XAdapter#creatingHolder(CustomHolder, ViewTypeUnit)} 来展示
+ * <p>
+ * Header可以添加多个
+ * {@link XAdapter#bindingHeader(CustomHolder, int) }和{@link XAdapter#creatingHeader(CustomHolder, int)}
+ * <p>
+ * Footer默认为2个，一个是加载信息，另一个是可自定义的Footer，重写下面方法实现
+ * {@link XAdapter#bindingFooter(CustomHolder) }和{@link XAdapter#creatingFooter(CustomHolder)}
+ * <p>
+ * （在第一版中部分注释我不用英文，可惜水平有限且并不直观，后面添加了中文注释）
  */
 public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
+    /**
+     * 空布局Mark
+     */
     public static final int VIEW_TYPE_BLANK = -20330;
+    /**
+     * Footer布局Mark
+     */
     public static final int VIEW_TYPE_FOOTER = -20331;
+    /**
+     * Footer 加载中布局Mark
+     */
     public static final int VIEW_TYPE_FOOTER_LOADING = -20332;
+    /**
+     * Footer 没有更多布局Mark
+     */
     public static final int VIEW_TYPE_FOOTER_NO_MORE = -20333;
+    /**
+     * Footer 重试布局Mark
+     */
     public static final int VIEW_TYPE_FOOTER_RETRY = -20344;
+    /**
+     * Footer 没有数据布局Mark
+     */
     public static final int VIEW_TYPE_FOOTER_NO_DATA = -20355;
 
+    /**
+     * Footers的几种新动态 布局Mark合集
+     */
     public static final int[] VIEW_TYPE_FOOTERS = new int[]{VIEW_TYPE_FOOTER,
             VIEW_TYPE_FOOTER_LOADING,
             VIEW_TYPE_FOOTER_NO_MORE,
             VIEW_TYPE_FOOTER_RETRY,
-            VIEW_TYPE_FOOTER_NO_DATA };
+            VIEW_TYPE_FOOTER_NO_DATA};
+
     /**
+     * 加载状态
      * LOADER_NO_DATA   没有数据
      * LOADER_NO_MORE   已加载全部，有footerLayoutId显示Footer
      * LOADER_CAN_LOAD  可以加载更多
@@ -56,19 +90,36 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
     public static final int LOADER_LOADING = 4;
     public static final int LOADER_RETRY = 5;
 
+    /**
+     * 当前加载状态
+     */
     private int loadMoreState = LOADER_INIT;
+
     /**
      * 所有数据，包括被过滤的数据
      */
     private List<T> mainList;
     /**
      * 显示的数据
-     * useFilter() == true 时使用
+     * useFilter() == true 时，或正常的展示列表
      */
     private List<T> dataList;
+    /**
+     * Context
+     */
     protected Context context;
+
+    /**
+     * Header 而已集合
+     */
     private SparseArray<Integer> headerLayoutIdList;
+
+    /**
+     * 多布局集合
+     * 不同的Holder使用不同的Mark来加载不同的Layout
+     */
     private Map<Integer, ViewTypeUnit> multiLayoutMap;
+
     /**
      * footerLayout 只有在没有更多数据的时候才会显示
      */
@@ -90,7 +141,12 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
     private BaseAnimation customAnimation;
     private BaseAnimation selectAnimation = new SlideInBottomAnimation();
 
+    /**
+     * 绑定列表数据接口
+     * 在某些极端情况下，列表内容被回收，通过此接口读取之前的数据
+     */
     private OnInitList onInitList;
+
     /**
      * 加载更多监听器
      */
@@ -101,6 +157,10 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
      * 如果加载的Layout == 0 则使用默认Layout，否则使用当前设置的Layout
      */
     private boolean useDefaultLoaderLayout = false;
+
+    /**
+     * 当没有数据的时候，是否展示没有数据提示的Footer
+     */
     private boolean showNoDataFooter = false;
 
     /**
@@ -119,6 +179,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
     private void init(Context context, OnInitList initList) {
         this.context = context;
         this.onInitList = initList;
+        /* 接口读取数据列表 */
         List<T> dataList = null;
         if (initList != null) {
             try {
@@ -130,6 +191,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
         if (dataList == null) {
             dataList = new ArrayList<>();
         }
+        /* 使用过滤器时处理列表数据 */
         if (useFilter()) {
             this.dataList = new ArrayList<>();
             this.mainList = dataList;
@@ -155,25 +217,31 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
         // Footer创建
         switch (viewType) {
-            case VIEW_TYPE_BLANK:
+            case VIEW_TYPE_BLANK:   /* 空白 */
                 return new CustomHolder(createHolderRootView(R.layout.layout_blank, parent));
-            case VIEW_TYPE_FOOTER:
+            case VIEW_TYPE_FOOTER:  /* Footer */
                 return new CustomHolder(createHolderRootView(footerLayoutId, parent)) {
                     @Override
                     protected void createHolder(final CustomHolder holder) {
                         ViewTypeUnit viewTypeUnit = new ViewTypeUnit(viewType, footerLayoutId);
+                        /* 点击监听 */
                         holder.setOnClickListener(v -> handleItemViewClick(holder, null, v.getId(), viewTypeUnit));
+                        /* 长按监听 */
                         holder.setOnLongClickListener(v -> handleItemViewLongClick(holder, null, v.getId(), viewTypeUnit));
                         creatingFooter(holder);
                     }
                 };
-            case VIEW_TYPE_FOOTER_LOADING:
+            case VIEW_TYPE_FOOTER_LOADING:  /* 加载中Footer */
+                /* getLoadingLayoutId() 来取得自定义的重试Layout */
                 return new CustomHolder(createHolderRootView(getLoadingLayoutId(), parent));
-            case VIEW_TYPE_FOOTER_NO_MORE:
+            case VIEW_TYPE_FOOTER_NO_MORE:  /* 没有更多Footer */
+                /* getNoMoreLayoutId() 来取得自定义的重试Layout */
                 return new CustomHolder(createHolderRootView(getNoMoreLayoutId(), parent));
-            case VIEW_TYPE_FOOTER_NO_DATA:
+            case VIEW_TYPE_FOOTER_NO_DATA:  /* 没有数据Footer */
+                /* getNoDataLayoutId() 来取得自定义的重试Layout */
                 return new CustomHolder(createHolderRootView(getNoDataLayoutId(), parent));
-            case VIEW_TYPE_FOOTER_RETRY:
+            case VIEW_TYPE_FOOTER_RETRY:    /* 重试Footer */
+                /* 通过getLoadRetryLayoutId() 来取得自定义的重试Layout */
                 CustomHolder holder = new CustomHolder(createHolderRootView(getLoadRetryLayoutId(), parent));
                 if (getLoadRetryLayoutId() == R.layout.layout_base_load_retry) {
                     holder.setClick(R.id.lMain, v -> {
@@ -191,12 +259,13 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
                         View itemView = createHolderRootView(headerLayoutIdList.get(headerKey), parent);
                         return new CustomHolder(itemView) {
                             @Override
-                            protected void createHolder(final CustomHolder holder1) {
-                                holder1.setOnClickListener(v -> handleItemViewClick(holder1, null, v.getId(), new ViewTypeUnit(headerKey, headerLayoutIdList.get(headerKey))));
-
-                                holder1.setOnLongClickListener(v -> handleItemViewLongClick(holder1, null, v.getId(), new ViewTypeUnit(headerKey, headerLayoutIdList.get(headerKey))));
+                            protected void createHolder(final CustomHolder holderHeader) {
+                                /* 点击监听 */
+                                holderHeader.setOnClickListener(v -> handleItemViewClick(holderHeader, null, v.getId(), new ViewTypeUnit(headerKey, headerLayoutIdList.get(headerKey))));
+                                /* 长按监听 */
+                                holderHeader.setOnLongClickListener(v -> handleItemViewLongClick(holderHeader, null, v.getId(), new ViewTypeUnit(headerKey, headerLayoutIdList.get(headerKey))));
                                 try {
-                                    creatingHeader(holder1, headerKey);
+                                    creatingHeader(holderHeader, headerKey);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     L.crash("creatingHeader Exception", e);
@@ -217,7 +286,9 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
                 return new CustomHolder(itemView) {
                     @Override
                     protected void createHolder(final CustomHolder holder) {
+                        /* 点击监听 */
                         holder.setOnClickListener(v -> handleItemViewClick(holder, getShowingList().get(holder.getAdapterPosition() - getHeaderCount()), v.getId(), viewTypeUnit));
+                        /* 长按监听 */
                         holder.setOnLongClickListener(v -> handleItemViewLongClick(holder, getShowingList().get(holder.getAdapterPosition() - getHeaderCount()), v.getId(), viewTypeUnit));
                         try {
                             creatingHolder(holder, viewTypeUnit);
@@ -230,6 +301,13 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
         }
     }
 
+    /**
+     * 创建RootView
+     *
+     * @param layoutId
+     * @param parent
+     * @return
+     */
     private View createHolderRootView(@LayoutRes int layoutId, ViewGroup parent) {
         return LayoutInflater.from(context).inflate(layoutId, parent, false);
     }
@@ -242,7 +320,9 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
         if (position == dataList.size() + headerLayoutIdList.size()) {
+            /* BindView Footer */
             int itemViewType = getItemViewType(position);
             if (itemViewType == VIEW_TYPE_FOOTER) {
                 bindingFooter(((CustomHolder) holder));
@@ -252,12 +332,12 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
                         loadMoreState = LOADER_LOADING;
                         loadMoreListener.onStartLoadMore();
                     }
-//                } else if (itemViewType == LAYOUT_FOOTER_RETRY) {
                 }
                 bindingFooterLoader((CustomHolder) holder, itemViewType);
             }
             return;
         } else if (position < headerLayoutIdList.size()) {
+            /* BindView Header */
             for (int i = 0; i < headerLayoutIdList.size(); i++) {
                 final int headerKey = headerLayoutIdList.keyAt(i);
                 if (getItemViewType(position) == headerKey) {
@@ -271,14 +351,11 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
             }
             return;
         }
+        /* BindView Items*/
         try {
             bindingHolder(((CustomHolder) holder), dataList, position - headerLayoutIdList.size());
         } catch (Exception e) {
             e.printStackTrace();
-            StringBuffer sb = new StringBuffer();
-            for (StackTraceElement traceElement : e.getStackTrace()) {
-                sb.append("\n").append(traceElement.toString());
-            }
             L.crash("BindingHolder Exception", e);
         }
         addAnimation(holder);
@@ -297,7 +374,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
         int type = holder.getItemViewType();
         boolean isFooter = false;
         for (int viewTypeFooterView : VIEW_TYPE_FOOTERS) {
-            if(type == viewTypeFooterView) isFooter = true;
+            if (type == viewTypeFooterView) isFooter = true;
         }
         if (isFooter || headerLayoutIdList.indexOfKey(type) >= 0) {
             setFullSpan(holder);
@@ -382,7 +459,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
      * @param holder
      * @param viewTypeUnit
      */
-    public void creatingHolder(CustomHolder holder, ViewTypeUnit viewTypeUnit)  throws Exception {
+    public void creatingHolder(CustomHolder holder, ViewTypeUnit viewTypeUnit) throws Exception {
 
     }
 
@@ -393,7 +470,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
      * @param dataList
      * @param pos
      */
-    public void bindingHolder(CustomHolder holder, List<T> dataList, int pos) throws Exception{
+    public void bindingHolder(CustomHolder holder, List<T> dataList, int pos) throws Exception {
 
     }
 
@@ -421,11 +498,15 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
         if (position < headerCount) {
             return headerLayoutIdList.keyAt(position);
         }
+        /* 当前展示列表大小 */
         int dataSize = getShowingList().size();
-        if (position == dataList.size() + headerCount) {
+        /* 加载提示Footer */
+        if (position == dataSize + headerCount) {
+            /* 加载更多后仍无数据 则换成无数据 */
             if (dataSize == 0 && loadMoreState == LOADER_NO_MORE) {
                 loadMoreState = LOADER_NO_DATA;
             }
+            /* 根据不同状态来展示加载Footer */
             switch (loadMoreState) {
                 case LOADER_LOADING:
                 case LOADER_CAN_LOAD:
@@ -457,6 +538,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
             }
         }
 
+        /* 取得当前Item的ViewTypeUnit */
         ViewTypeUnit viewTypeUnit = getViewTypeUnitForLayout(dataList.get(position - headerCount));
         if (viewTypeUnit == null) {
             try {
@@ -470,6 +552,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
                 return key.intValue();
             }
         }
+        /* 返回对应的ViewTypeUnit */
         int viewType = multiLayoutMap.size() + 10000;
         multiLayoutMap.put(viewType, viewTypeUnit);
         return viewType;
@@ -490,14 +573,21 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
         return footerCount + headerCount;
     }
 
+    /**
+     * 是否Header
+     *
+     * @param pos
+     * @return
+     */
     public boolean isHeader(int pos) {
         return pos < headerLayoutIdList.size();
     }
 
     /**
      * 取得列表Item
+     *
      * @param itemPosWithoutHeaderCount 列表中的Item位置, 不包括Header的Item,
-     *                如使用getAdapterPosition()需要减掉getHeaderCount()
+     *                                  如使用getAdapterPosition()需要减掉getHeaderCount()
      * @return
      */
     public T getItem(int itemPosWithoutHeaderCount) {
@@ -508,18 +598,39 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
         return null;
     }
 
+    /**
+     * 取得当前Holder的Item
+     *
+     * @param holder
+     * @return
+     */
     public T getCurrentItem(CustomHolder holder) {
         return dataList.get(holder.getAdapterPosition() - getHeaderCount());
     }
 
+    /**
+     * 取得实现的列表
+     *
+     * @return
+     */
     public OnInitList getOnInitList() {
         return onInitList;
     }
 
+    /**
+     * 设置动画时长
+     *
+     * @param animationDuration
+     */
     public void setAnimationDuration(int animationDuration) {
         this.animationDuration = animationDuration;
     }
 
+    /**
+     * 设置动画
+     *
+     * @param animationInterpolator
+     */
     public void setAnimationInterpolator(Interpolator animationInterpolator) {
         this.animationInterpolator = animationInterpolator;
     }
@@ -568,6 +679,11 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
         if (dataList == null) {
             dataList = new ArrayList<>();
         }
+        if (dataList == this.dataList) {
+            notifyDataSetChanged();
+            return;
+        }
+        /* 是否使用过滤 */
         if (useFilter()) {
             mainList.clear();
             mainList.addAll(dataList);
@@ -585,8 +701,8 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
     /**
      * useFilter() == true 时有效果
      */
-    @Deprecated
-    public void resetDataList() {
+    public void clearDataList() {
+        /* 是否使用过滤 */
         if (useFilter()) {
             this.dataList.clear();
             this.dataList.addAll(setFilterForAdapter(mainList));
@@ -598,6 +714,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     public void removeItem(int pos) {
         T item = dataList.get(pos);
+        /* 是否使用过滤 */
         if (useFilter()) {
             mainList.remove(item);
             dataList.remove(pos);
@@ -614,6 +731,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
      * @param item
      */
     public void addItemNoFilter(int pos, T item) {
+        /* 是否使用过滤 */
         if (useFilter()) {
             dataList.add(pos, item);
             mainList.add(pos, item);
@@ -623,8 +741,14 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
         notifyItemInserted(headerLayoutIdList.size() + pos);
     }
 
+    /**
+     * 更新Item
+     * @param pos
+     * @param item
+     */
     public void updateItem(int pos, T item) {
         T itemOld = dataList.get(pos);
+        /* 是否使用过滤 */
         if (useFilter()) {
             int mainPos = mainList.indexOf(itemOld);
             mainList.set(mainPos, item);
@@ -635,7 +759,12 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
         notifyItemChanged(headerLayoutIdList.size() + pos);
     }
 
+    /**
+     * 添加Item
+     * @param item
+     */
     public void addItem(T item) {
+        /* 是否使用了过滤 */
         if (useFilter()) {
             dataList.add(item);
             mainList.add(item);
@@ -645,30 +774,63 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
         notifyItemInserted(getItemCount() - 2);
     }
 
+    /**
+     * 设置Footer Layout
+     * @param footerLayout
+     */
     public void setFooter(@LayoutRes int footerLayout) {
         this.footerLayoutId = footerLayout;
     }
 
+    /**
+     * 添加默认Header，Key值为0
+     * @param headerLayoutId
+     */
     public void addHeader(@LayoutRes int headerLayoutId) {
         addHeader(XRefresher.HEADER_ONE, headerLayoutId);
     }
 
+    /**
+     * 添加Header，避免使用Key为0的Header以免与默认Header发生碰撞
+     * @param headerKey
+     * @param headerLayoutId
+     */
     public void addHeader(int headerKey, @LayoutRes int headerLayoutId) {
         headerLayoutIdList.put(headerKey, headerLayoutId);
     }
 
+    /**
+     * Header的Holder 创建
+     * @param holder
+     * @param headerKey
+     * @throws Exception
+     */
     protected void creatingHeader(CustomHolder holder, int headerKey) throws Exception {
 
     }
 
-    protected void bindingHeader(CustomHolder holder, int headerKey) throws Exception{
+    /**
+     * Header OnBind
+     * @param holder
+     * @param headerKey
+     * @throws Exception
+     */
+    protected void bindingHeader(CustomHolder holder, int headerKey) throws Exception {
 
     }
 
+    /**
+     * Footer的Holder创建
+     * @param holder
+     */
     protected void creatingFooter(CustomHolder holder) {
 
     }
 
+    /**
+     * Footer OnBind
+     * @param holder
+     */
     protected void bindingFooter(CustomHolder holder) {
 
     }
@@ -685,6 +847,10 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     }
 
+    /**
+     * setDataList时，在Notify以前调用此方法，现在是空实现
+     * @param dataList
+     */
     protected void beforeSetDataList(List<T> dataList) {
 
     }
@@ -727,6 +893,11 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
         return false;
     }
 
+
+    /*
+     * 下面方法由XRefresher或其它集成XAdapter的自定义控件内部调用，正常使用时不需要调用下列方法
+     */
+
     /**
      * 加载更多结束
      *
@@ -752,6 +923,9 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
         }
     }
 
+    /**
+     * 没有数据
+     */
     public void refreshedNoData() {
         if (showNoDataFooter && loadMoreState == LOADER_INIT) {
             loadMoreState = LOADER_NO_DATA;
@@ -765,50 +939,97 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
         void onStartLoadMore();
     }
 
+    /**
+     * 加载更多接口
+     */
     public ILoadMoreListener getLoadMoreListener() {
         return loadMoreListener;
     }
 
+    /**
+     * 设置加载更多监听
+     * @param loadMoreListener
+     */
     public void setLoadMoreListener(ILoadMoreListener loadMoreListener) {
         this.loadMoreListener = loadMoreListener;
     }
 
+    /**
+     * 设置加载中LayoutId
+     * @param loadingLayoutId
+     */
     public void setLoadingLayout(@LayoutRes int loadingLayoutId) {
         this.loadingLayoutId = loadingLayoutId;
     }
 
+    /**
+     * 取得加载中LayoutId
+     * @return
+     */
     public int getLoadingLayoutId() {
         return useDefaultLoaderLayout && loadingLayoutId == 0 ? R.layout.layout_base_loading : loadingLayoutId;
     }
 
+    /**
+     * 取得没有更多的LayoutId
+     * @return
+     */
     private int getNoMoreLayoutId() {
         return useDefaultLoaderLayout && noMoreLayoutId == 0 ? R.layout.layout_base_no_more : noMoreLayoutId;
     }
 
+    /**
+     * 设置没有更多的LayoutId
+     * @param noMoreLayoutId
+     */
     public void setNoMoreLayoutId(@LayoutRes int noMoreLayoutId) {
         this.noMoreLayoutId = noMoreLayoutId;
     }
 
+    /**
+     * 取得没有数据的LayoutId
+     * @return
+     */
     public int getNoDataLayoutId() {
         return useDefaultLoaderLayout && noDataLayoutId == 0 ? R.layout.layout_base_no_data : noDataLayoutId;
     }
 
+    /**
+     * 设置没有数据的LayoutId
+     * @param noDataLayoutId
+     */
     public void setNoDataLayoutId(int noDataLayoutId) {
         this.noDataLayoutId = noDataLayoutId;
     }
 
+    /**
+     * 取得重试的LayoutId
+     * @return
+     */
     public int getLoadRetryLayoutId() {
         return useDefaultLoaderLayout && loadRetryLayoutId == 0 ? R.layout.layout_base_load_retry : loadRetryLayoutId;
     }
 
+    /**
+     * 设置重试的LayoutId
+     * @param loadRetryLayoutId
+     */
     public void setLoadRetryLayoutId(int loadRetryLayoutId) {
         this.loadRetryLayoutId = loadRetryLayoutId;
     }
 
+    /**
+     * 设置是否使用默认的Laoder Layout
+     * @param useDefaultLoaderLayout
+     */
     public void setUseDefaultLoaderLayout(boolean useDefaultLoaderLayout) {
         this.useDefaultLoaderLayout = useDefaultLoaderLayout;
     }
 
+    /**
+     * 有数据时是是否展示没Footer
+     * @param showNoDataFooter
+     */
     public void setShowNoDataFooter(boolean showNoDataFooter) {
         this.showNoDataFooter = showNoDataFooter;
     }

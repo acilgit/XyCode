@@ -8,10 +8,10 @@
         android:supportsRtl="true">
 
         <activity
-            android:name="xyz.xmethod.xycode.utils.crashUtil.CrashActivity"
+            android:name=".debugHelper.crashUtil.CrashActivity"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="xyz.xmethod.xycode.utils.debugger.DebugActivity"
+            android:name=".debugHelper.debug.DebugActivity"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/ServerControllerTheme"
             android:screenOrientation="nosensor" />
@@ -20,7 +20,7 @@
             android:theme="@style/UpdateDialogTheme"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="xyz.xmethod.xycode.utils.serverApiHelper.ServerControllerActivity"
+            android:name=".serverApiHelper.ServerControllerActivity"
             android:theme="@style/ServerControllerTheme"
             android:screenOrientation="nosensor" />
     </application>

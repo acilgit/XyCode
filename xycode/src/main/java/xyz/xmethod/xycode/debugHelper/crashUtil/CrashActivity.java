@@ -1,4 +1,4 @@
-package xyz.xmethod.xycode.utils.crashUtil;
+package xyz.xmethod.xycode.debugHelper.crashUtil;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -14,10 +14,10 @@ import xyz.xmethod.xycode.R;
 import xyz.xmethod.xycode.Xy;
 import xyz.xmethod.xycode.base.XyBaseActivity;
 import xyz.xmethod.xycode.interfaces.Interfaces;
-import xyz.xmethod.xycode.utils.LogUtil.LogItem;
-import xyz.xmethod.xycode.utils.LogUtil.LogLayout;
+import xyz.xmethod.xycode.debugHelper.logHelper.LogItem;
+import xyz.xmethod.xycode.debugHelper.logHelper.LogLayout;
 import xyz.xmethod.xycode.utils.DateUtils;
-import xyz.xmethod.xycode.utils.LogUtil.L;
+import xyz.xmethod.xycode.debugHelper.logHelper.L;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

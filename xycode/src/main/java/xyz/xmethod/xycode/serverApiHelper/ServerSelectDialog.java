@@ -1,4 +1,4 @@
-package xyz.xmethod.xycode.utils.serverApiHelper;
+package xyz.xmethod.xycode.serverApiHelper;
 
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;

@@ -1,4 +1,4 @@
-package xyz.xmethod.xycode.utils.debugger;
+package xyz.xmethod.xycode.debugHelper.debug;
 
 import xyz.xmethod.xycode.interfaces.Interfaces;
 import xyz.xmethod.xycode.okHttp.Param;

@@ -1,4 +1,4 @@
-package xyz.xmethod.xycode.utils.debugger;
+package xyz.xmethod.xycode.debugHelper.debug;
 
 import android.content.Intent;
 import android.os.Bundle;

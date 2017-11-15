@@ -5,10 +5,10 @@ import android.app.Activity;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import xyz.xmethod.xycode.base.XyBaseActivity;
-import xyz.xmethod.xycode.utils.LogUtil.JsonTool;
-import xyz.xmethod.xycode.utils.LogUtil.L;
-import xyz.xmethod.xycode.utils.debugger.DebugActivity;
-import xyz.xmethod.xycode.utils.debugger.DebugItem;
+import xyz.xmethod.xycode.debugHelper.logHelper.JsonTool;
+import xyz.xmethod.xycode.debugHelper.logHelper.L;
+import xyz.xmethod.xycode.debugHelper.debug.DebugActivity;
+import xyz.xmethod.xycode.debugHelper.debug.DebugItem;
 
 import java.io.File;
 import java.io.IOException;
