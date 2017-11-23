@@ -7,6 +7,7 @@ import okhttp3.Response;
 
 /**
  * Created by xiuye on 2017/8/17.
+ * OkHttp初始化接口
  */
 public interface IOkInit {
     /**
@@ -19,7 +20,7 @@ public interface IOkInit {
      * 通过返回的的数据，返回结果代码
      * @param call
      * @param response
-     * @param json
+     * @param json  在JSON中提取ResultCode返回结果代码
      * @return
      */
     int judgeResultWhenFirstReceivedResponse(Call call, Response response, JSONObject json);
@@ -49,7 +50,7 @@ public interface IOkInit {
      * @param call
      * @param response
      * @param json
-     * @param resultCode
+     * @param resultCode 通过取得的ResultCode来判断是否继续流程，或中断流程执行其它操作
      * @return
      */
     boolean resultSuccessByJudge(Call call, Response response, JSONObject json, int resultCode);

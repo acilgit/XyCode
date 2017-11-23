@@ -80,6 +80,16 @@ public class OkHttp {
     public static final int NO_NETWORK = 882;
 
     /**
+     * debug interval
+     */
+    public static final int DEBUG_INTERVAL = 500;
+
+    /**
+     * debug interval times
+     */
+    public static final int DEBGU_INTERVAL_TIMES = 600;
+
+    /**
      * OkHttpClient
      */
     private static OkHttpClient client;
@@ -136,14 +146,25 @@ public class OkHttp {
         OkHttp.client = client;
     }
 
+    /**
+     * 是否Debug模式
+     */
     public static boolean isDebugMode() {
         return debugMode;
     }
 
+    /**
+     * 设置Debug模式
+     * @param debugMode
+     */
     public static void setDebugMode(boolean debugMode) {
         OkHttp.debugMode = debugMode;
     }
 
+    /**
+     * 设置全局的MediaType
+     * @param mediaType
+     */
     public static void setRequestMediaType(MediaType mediaType) {
         OkHttp.mediaType = mediaType;
     }
@@ -155,6 +176,10 @@ public class OkHttp {
         getClient().dispatcher().setMaxRequestsPerHost(max);
     }
 
+    /**
+     * 取得OkHttp Client实例
+     * @return
+     */
     public static OkHttpClient getClient() {
         synchronized (lock) {
             if (client == null) {
@@ -172,6 +197,10 @@ public class OkHttp {
         }
     }
 
+    /**
+     * 取得CallItem列表
+     * @return
+     */
     public static Map<String, CallItem> getCallItems() {
         if (callItems == null) {
             callItems = new HashMap<>();
@@ -185,6 +214,12 @@ public class OkHttp {
         return callItems;
     }
 
+    /**
+     * 新建请求
+     * 普通请求使用RxJava的IO线程，文件上传使用OkHttp的线程池上传
+     * @param activity 不为空时，则会在主线程中完成请求结果回调，否则依然会在IO线程下进行
+     * @return
+     */
     public static CallItem newCall(Activity activity) {
         CallItem callItem = new CallItem();
         callItem.id = String.valueOf(UUID.randomUUID());
@@ -253,11 +288,13 @@ public class OkHttp {
 
                         DebugActivity.startThis(debugItem.getKey(), allParam);
 
-                        for (int i = 0; i < 600; i++) {
+                        /* 调试周期 */
+                        for (int i = 0; i < DEBGU_INTERVAL_TIMES; i++) {
                             if (debugItem.isPostBegun()) {
                                 break;
                             } else {
-                                Thread.sleep(500);
+                                /* 等待调试通过 */
+                                Thread.sleep(DEBUG_INTERVAL);
                             }
                         }
                         allParam = debugItem.getParam();
@@ -404,8 +441,8 @@ public class OkHttp {
         Response response = responseItem.getResponse();
         OkResponseListener okResponseListener = responseItem.getOkResponseListener();
         Call call = responseItem.getCall();
-//        Call call = null;
         if (response.isSuccessful()) {
+            /* 请求返回结果成功 */
             String responseStr = "";
             try {
                 final String strResult = response.body().string();
@@ -413,6 +450,7 @@ public class OkHttp {
 
                 responseItem.setStrResult(responseStr);
 
+                /* 调试模式 */
                 if (debugMode) {
                     DebugItem debugItem = DebugActivity.getDebugItem(debugKey);
                     if (debugItem != null) {
@@ -421,11 +459,13 @@ public class OkHttp {
 
                         DebugActivity.startThis(debugItem.getKey());
 
-                        for (int i = 0; i < 600; i++) {
+                        /* 调试周期 */
+                        for (int i = 0; i < DEBGU_INTERVAL_TIMES; i++) {
                             if (debugItem.isPostFinished()) {
                                 break;
                             } else {
-                                Thread.sleep(500);
+                                /* 等待调试通过 */
+                                Thread.sleep(DEBUG_INTERVAL);
                             }
                         }
                         if (debugItem.getJsonModify()!= null) {

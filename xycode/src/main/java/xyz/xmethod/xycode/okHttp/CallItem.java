@@ -12,21 +12,75 @@ import okhttp3.MediaType;
 /**
  * Created by XY on 2017-06-20.
  * @author xiuye
+ *
+ * OkHttp request Item
  */
 public class CallItem {
 
+    /**
+     * OkHttp Call
+     */
     Call call;
+
+    /**
+     * Item 唯一标识
+     */
     String id;
+
+    /**
+     * 请求地址
+     */
     String url;
+
+    /**
+     * 参数
+     */
     Param body;
+
+    /**
+     * 请求头
+     */
     Header header;
+
+    /**
+     * 请求方法
+     */
     int method = OkHttp.POST;
+
+    /**
+     * 请求体格式
+     */
     private MediaType mediaType = null;
+
+    /**
+     * 文件
+     * 使用form格式
+     */
     Map<String, File> files;
+
+    /**
+     * 使用Activity进行请求
+     * 可自动取消加载中提示框
+     */
     Activity activity;
+
+    /**
+     * 回调监听
+     */
     OkResponseListener okResponseListener;
+
+    /**
+     * 文件上传监听
+     */
     OkFileHelper.FileProgressListener fileProgressListener;
+
+    /**
+     * 默认添加全局参数
+     */
     boolean addDefaultParams = true;
+    /**
+     * 默认添加全局请求头
+     */
     boolean addDefaultHeader = true;
 
     /**
@@ -42,9 +96,8 @@ public class CallItem {
         if (files != null) {
            call = OkHttp.uploadFiles(activity, url, files, body, header, addDefaultHeader, addDefaultParams, okResponseListener, fileProgressListener);
         } else {
-            /*call =*/ OkHttp.request(mediaType, method, activity, url, body, addDefaultParams, header, addDefaultHeader, okResponseListener);
+           OkHttp.request(mediaType, method, activity, url, body, addDefaultParams, header, addDefaultHeader, okResponseListener);
         }
-//        return call;
     }
 
     /**
@@ -107,7 +160,7 @@ public class CallItem {
     }
 
     /**
-     * 上传文件
+     * 上传单个文件
      * @param fileKey
      * @param file
      * @param fileProgressListener

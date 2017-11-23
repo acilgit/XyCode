@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * Created by XY on 2016-09-02.
+ *
  */
 public class Interfaces {
 

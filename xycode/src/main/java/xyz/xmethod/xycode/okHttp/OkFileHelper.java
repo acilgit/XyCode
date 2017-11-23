@@ -1,6 +1,5 @@
 package xyz.xmethod.xycode.okHttp;
 
-import java.io.File;
 import java.io.IOException;
 
 import okhttp3.MediaType;
@@ -12,19 +11,30 @@ import okio.Okio;
 import okio.Sink;
 
 /**
- * Created by 18953 on 2016/7/12.
+ * Created by xiuYe on 2016/7/12.
+ *
  */
 public class OkFileHelper {
 
-    private File tempFile;
-
-    //customer RequestBody，can show progress
+    /**
+     * customer RequestBody，can show progress
+     *
+     */
     public static class ProgressRequestBody extends RequestBody {
-        // body
+
+        /**
+         * body
+         */
         private final RequestBody requestBody;
-        //the progress callback interface
+
+        /**
+         * the progress callback interface
+         */
         private final FileProgressListener fileProgressListener;
-        // upload BufferedSink
+
+        /**
+         * upload BufferedSink
+         */
         private BufferedSink bufferedSink;
 
         /**
@@ -108,7 +118,9 @@ public class OkFileHelper {
         }
     }
 
-    // progress listener callback
+    /**
+     * progress listener callback
+     */
     public interface FileProgressListener {
         void update(long bytesRead, long contentLength, int percent, boolean done);
     }

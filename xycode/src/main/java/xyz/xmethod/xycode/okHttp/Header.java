@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 /**
  * Created by XY on 2016/7/11.
+ * 请求Header
  */
 public class Header extends HashMap<String, String> {
 

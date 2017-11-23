@@ -11,6 +11,7 @@ import xyz.xmethod.xycode.R;
 
 /**
  * Created by XY on 2016-07-28.
+ *
  */
 public class NoScrollViewPager extends ViewPager {
 

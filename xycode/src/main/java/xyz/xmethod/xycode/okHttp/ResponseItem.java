@@ -7,17 +7,43 @@ import okhttp3.Response;
 
 /**
  * Created by xiuye on 2017/8/17.
+ *
+ * OkHttp请求响应Item
+ *
  */
-
 public class ResponseItem {
 
+    /**
+     * 返回结果
+     */
     private Response response;
+    /**
+     * OkHttp Call
+     */
     private Call call;
+    /**
+     * 请求结果接口
+     */
     private OkResponseListener okResponseListener;
+    /**
+     * 结果的JSON
+     */
     private JSONObject jsonObject;
+    /**
+     * 结果
+     */
     private String strResult;
+    /**
+     * 请求地址
+     */
     private String url;
+    /**
+     * Debug Key
+     */
     private String debugKey;
+    /**
+     * 结果代码
+     */
     private int resultCode = OkHttp.RESULT_BLANK;
 
     public ResponseItem(Response response, Call call, String url, OkResponseListener okResponseListener) {

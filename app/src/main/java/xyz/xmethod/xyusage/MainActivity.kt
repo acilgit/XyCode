@@ -14,6 +14,7 @@ import xyz.xmethod.xycode.xRefresher.RefreshRequest
 import java.util.*
 
 class MainActivity : XyBaseActivity() {
+
     override fun setActivityLayout(): Int = R.layout.activity_main
 
     override fun setLoadingDialog(): AlertDialog? = null

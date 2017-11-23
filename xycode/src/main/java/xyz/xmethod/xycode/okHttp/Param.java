@@ -4,6 +4,8 @@ import java.util.LinkedHashMap;
 
 /**
  * Created by XY on 2016/7/11.
+ *
+ * 请求参数
  */
 public class Param extends LinkedHashMap<String, String> {
 

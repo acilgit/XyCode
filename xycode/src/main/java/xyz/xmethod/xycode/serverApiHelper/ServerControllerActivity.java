@@ -96,14 +96,18 @@ public class ServerControllerActivity extends AppCompatActivity implements View.
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.btnReleaseServer) {
+            /* 设置为正式服务器地址 */
             api.setServerUrl(api.getReleaseUrl());
             finish();
         } else if (i == R.id.btnDebugServer) {
+            /* 设置为正式服务器地址 */
             api.setServerUrl(api.getDebugUrl());
             finish();
         } else if (i == R.id.btnOptionServer) {
+            /* 打开选择服务器列表 */
             new ServerSelectDialog(ServerControllerActivity.this).show();
         } else if (i == R.id.tvClose) {
+            /* 退出 */
             finish();
         }
     }
