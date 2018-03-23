@@ -1,6 +1,6 @@
-<resources>
+<resources  >
     <!-- items -->
-    <style name="divider">
+    <style name="divider" >
         <item name="android:background">@color/bgDivider</item>
         <item name="android:layout_height">@dimen/dividerLineHeight</item>
         <item name="android:layout_width">match_parent</item>

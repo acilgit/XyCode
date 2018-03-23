@@ -19,6 +19,8 @@ class MainActivity : XyBaseActivity() {
 
     override fun setLoadingDialog(): AlertDialog? = null
 
+
+
     override fun initOnCreate(savedInstanceState: Bundle?) {
         rf.setup(this, object : XAdapter<String>(this){
 

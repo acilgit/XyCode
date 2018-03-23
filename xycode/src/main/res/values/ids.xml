@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources>
+<resources  >
     <item type="id" name="viewPager"/>
     <item type="id" name="dots"/>
+
+    <item name="banner_indicatorId" type="id" />
 </resources>

@@ -7,8 +7,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +26,7 @@ import android.view.inputmethod.InputMethodManager;
 import xyz.xmethod.xycode.adapter.CustomHolder;
 import xyz.xmethod.xycode.annotation.annotationHelper.StateBinder;
 import xyz.xmethod.xycode.interfaces.Interfaces;
+import xyz.xmethod.xycode.interfaces.PermissionListener;
 import xyz.xmethod.xycode.okHttp.CallItem;
 import xyz.xmethod.xycode.okHttp.OkHttp;
 import xyz.xmethod.xycode.debugHelper.logHelper.LogLayout;
@@ -54,6 +59,12 @@ public abstract class XyBaseActivity extends AppCompatActivity {
      * Tools.pickNumber()方法取得
      */
     public static final int REQUEST_CODE_GOT_PHONE_NUMBER = 3801;
+
+    /**
+     * 请求权限Code
+     */
+    private static final int REQUEST_PERIMISSION_CODE = 1000;
+
 
     /**
      * BaseActivity列表
@@ -106,6 +117,11 @@ public abstract class XyBaseActivity extends AppCompatActivity {
      */
     private boolean firstShowOnStart = true;
 
+    /**
+     * 权限回调监听
+     */
+    private PermissionListener mListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,18 +141,21 @@ public abstract class XyBaseActivity extends AppCompatActivity {
     /**
      * 返回Activity的LayoutId
      * 当不使用时返回0可以在onCreate()中的setContentView中进行设置
+     *
      * @return layoutId
      */
     protected abstract int setActivityLayout();
 
     /**
      * onCreate方法时进行初始化操作
+     *
      * @param savedInstanceState savedInstanceState
      */
     protected abstract void initOnCreate(Bundle savedInstanceState);
 
     /**
      * 在onStart()的时候进行操作
+     *
      * @param firstShow true：第一次OnStart
      */
     protected void showOnStart(boolean firstShow) {
@@ -184,9 +203,10 @@ public abstract class XyBaseActivity extends AppCompatActivity {
     /**
      * 在Java中可以直接使用此方法通过Id对控件进行引用
      * 如果在Kotlin中则可以省略
+     *
      * @return
      */
-    public CustomHolder rootHolder(){
+    public CustomHolder rootHolder() {
         if (rootHolder == null) {
             rootHolder = new CustomHolder(getWindow().getDecorView().getRootView());
         }
@@ -249,7 +269,9 @@ public abstract class XyBaseActivity extends AppCompatActivity {
 
     private void showDialog(boolean manualDismiss) {
         loadingDialogShowManual = manualDismiss;
-        if(loadingDialog!=null) loadingDialog.dismiss();
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
         loadingDialog = setLoadingDialog();
         if (loadingDialog != null && !loadingDialog.isShowing()) {
             loadingDialog.show();
@@ -333,6 +355,7 @@ public abstract class XyBaseActivity extends AppCompatActivity {
 
     /**
      * 加入Activity引用组中
+     *
      * @param activity
      */
     private static void addActivity(Activity activity) {
@@ -349,6 +372,7 @@ public abstract class XyBaseActivity extends AppCompatActivity {
 
     /**
      * 删除Activity引用组中
+     *
      * @param activity
      */
     private static void removeActivity(Activity activity) {
@@ -387,6 +411,7 @@ public abstract class XyBaseActivity extends AppCompatActivity {
     /**
      * judge a activity is on foreground
      * 判断是否当前页面
+     *
      * @param activity
      */
     public static boolean isForeground(Activity activity) {
@@ -406,6 +431,7 @@ public abstract class XyBaseActivity extends AppCompatActivity {
 
     /**
      * 取得当前页面
+     *
      * @param context
      * @return
      */
@@ -427,6 +453,7 @@ public abstract class XyBaseActivity extends AppCompatActivity {
 
     /**
      * 取得className相同的第一个页面
+     *
      * @param className
      * @return
      */
@@ -448,6 +475,7 @@ public abstract class XyBaseActivity extends AppCompatActivity {
 
     /**
      * 当前页面是否注册EventBus
+     *
      * @return
      */
     protected boolean useEventBus() {
@@ -456,6 +484,7 @@ public abstract class XyBaseActivity extends AppCompatActivity {
 
     /**
      * Post EventBus事件
+     *
      * @param eventName
      */
     public void postEvent(String eventName) {
@@ -480,6 +509,7 @@ public abstract class XyBaseActivity extends AppCompatActivity {
 
     /**
      * 在主线程中执行EventBus返回的事件
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -488,6 +518,7 @@ public abstract class XyBaseActivity extends AppCompatActivity {
 
     /**
      * 在后台线程中执行EventBus返回的事件
+     *
      * @param event
      */
     @Subscribe
@@ -516,7 +547,7 @@ public abstract class XyBaseActivity extends AppCompatActivity {
         if (data != null) {
             uri = data.getData();
             if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_PHOTO_SELECT) {
-                onPhotoSelectResult( uri);
+                onPhotoSelectResult(uri);
             }
         }
     }
@@ -525,6 +556,7 @@ public abstract class XyBaseActivity extends AppCompatActivity {
      * 直接处理返回的图片选择Uri
      * 只有返回内容时才会被调用且
      * requestCode == REQUEST_CODE_PHOTO_SELECT
+     *
      * @param uri
      */
     protected void onPhotoSelectResult(Uri uri) {
@@ -533,6 +565,7 @@ public abstract class XyBaseActivity extends AppCompatActivity {
 
     /**
      * 加载中的对话框
+     *
      * @return null：则不使用对话框
      */
     protected abstract AlertDialog setLoadingDialog();
@@ -548,10 +581,62 @@ public abstract class XyBaseActivity extends AppCompatActivity {
 
     /**
      * 设置输入法模式
+     *
      * @param windowMode 在 WindowMode 中选择相应选项，或从WindowManager.LayoutParams中选择
      */
     protected void setWindowMode(int windowMode) {
         getWindow().setSoftInputMode(windowMode);
+    }
+
+
+    /**
+     * 权限封装处理
+     */
+    public void requestRuntimePermissions(String[] permissions, PermissionListener listener) {
+        mListener = listener;
+        List<String> permissionList = new ArrayList<>();
+        for (String permission : permissions) {
+            /* 检测是否授权，没有授权添加入list中去授权*/
+            if (ContextCompat.checkSelfPermission(this, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(permission);
+            }
+        }
+        /* 如果有未授权的则去请求权限 */
+        if (!permissionList.isEmpty()) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    permissionList.toArray(new String[permissionList.size()]),
+                    REQUEST_PERIMISSION_CODE);
+        } else {
+            mListener.onGranted();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_PERIMISSION_CODE:
+                if (grantResults.length > 0) {
+                    /* 存储拒绝的权限 */
+                    List<String> deniedPermission = new ArrayList<>();
+                    for (int i = 0; i < grantResults.length; i++) {
+                        int grantResult = grantResults[i];
+                        if (grantResult == PackageManager.PERMISSION_DENIED) {
+                            deniedPermission.add(permissions[i]);
+                        }
+                    }
+                    if (deniedPermission.isEmpty()) {
+                        mListener.onGranted();
+                    } else {
+                        mListener.onDenied(deniedPermission);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
     }
 
 }
