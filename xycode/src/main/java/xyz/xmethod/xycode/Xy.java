@@ -11,7 +11,7 @@ import xyz.xmethod.xycode.storages.ShareStorage;
 
 /**
  * Created by XY on 2017-06-08.
- * 使用xyLibrary时先在应用中init()
+ * 使用xyLibrary时先在应用中init()  哈哈大笑
  */
 public class Xy {
     /**
