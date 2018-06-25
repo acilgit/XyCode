@@ -40,7 +40,7 @@ import xyz.xmethod.xycode.xRefresher.recyclerviewHelper.XLinearLayoutManager;
 /**
  * Created by XiuYe on 2016/6/17.
  * 列表刷新器
- *
+ * <p>
  * XRefresher可以加载Header，并且刷新列表或加载更多内容
  * 所有过程都自动执行
  * 初始化时需要传入XyBaseActivity作网络请求操作
@@ -270,7 +270,7 @@ public class XRefresher extends LinearLayout implements FlexibleDividerDecoratio
         /**
          * 设置请求列表监听
          */
-        public RefreshSetter setRefreshRequest(RefreshRequest refreshRequest) {
+        public RefreshSetter    setRefreshRequest(RefreshRequest refreshRequest) {
             refresher.refreshRequest = refreshRequest;
             setSwipeRefresh();
             return this;
@@ -342,8 +342,9 @@ public class XRefresher extends LinearLayout implements FlexibleDividerDecoratio
                         case XAdapter.VIEW_TYPE_FOOTER_RETRY:
                             return layoutManager.getSpanCount();
                         default:
-                            if (layoutManagerSpanListener != null)
+                            if (layoutManagerSpanListener != null) {
                                 return layoutManagerSpanListener.setSpanCount(position);
+                            }
                     }
                     return 1;
                 }
@@ -457,8 +458,12 @@ public class XRefresher extends LinearLayout implements FlexibleDividerDecoratio
          */
         private void setSwipeRefresh() {
             swipeRefreshLayout.setOnRefreshListener(() -> {
-                if (refresher.swipeListener != null) refresher.swipeListener.onRefresh();
-                if (refresher.refreshRequest != null) refresher.refreshList();
+                if (refresher.swipeListener != null) {
+                    refresher.swipeListener.onRefresh();
+                }
+                if (refresher.refreshRequest != null) {
+                    refresher.refreshList();
+                }
             });
         }
     }
@@ -532,7 +537,9 @@ public class XRefresher extends LinearLayout implements FlexibleDividerDecoratio
                         switch (refreshType) {
                             case REFRESH:
                                 swipe.setRefreshing(false);
-                                if (state.pageIndex == 0) state.pageIndex++;
+                                if (state.pageIndex == 0) {
+                                    state.pageIndex++;
+                                }
                                 break;
                             default:
                                 /* 加入到未进行过滤的列表中 */
@@ -552,7 +559,9 @@ public class XRefresher extends LinearLayout implements FlexibleDividerDecoratio
                                         break;
                                     }
                                 }
-                                if (!hasSameItem) list.add(newItem);
+                                if (!hasSameItem) {
+                                    list.add(newItem);
+                                }
                             }
                             /* 重写refreshRequest.compareTo()来进行手工排序 */
                             Collections.sort(list, (arg0, arg1) -> refreshRequest.compareTo(arg0, arg1));
@@ -561,8 +570,9 @@ public class XRefresher extends LinearLayout implements FlexibleDividerDecoratio
                             adapter.setDataList(list);
                         }
                         /* 设置状态 */
-                        if (onLastPageListener != null)
+                        if (onLastPageListener != null) {
                             onLastPageListener.receivedList(state.lastPage);
+                        }
 
                         if (refreshType == REFRESH) {
                             adapter.refreshedNoData();
@@ -580,12 +590,14 @@ public class XRefresher extends LinearLayout implements FlexibleDividerDecoratio
                     @Override
                     protected void handleAllFailureSituation(Call call, int resultCode) {
                         switch (refreshType) {
+
                             case REFRESH:
                                 swipe.setRefreshing(false);
                                 break;
                             case LOAD:
                                 adapter.loadingMoreError();
                                 break;
+                                default:
                         }
                         /* 设置在InitRefresher中，对所有错误信息统一处理 */
                         if (!refreshRequest.handleAllFailureSituation(call, resultCode) && initRefresher != null) {
@@ -634,8 +646,9 @@ public class XRefresher extends LinearLayout implements FlexibleDividerDecoratio
             if (size > 0) {
                 // 小于整页倍数时，把请求数量调整为整页倍数
                 int requestPageSize = (size / state.pageDefaultSize) * state.pageDefaultSize;
-                if (size % state.pageDefaultSize > 0)
+                if (size % state.pageDefaultSize > 0) {
                     requestPageSize = requestPageSize + state.pageDefaultSize;
+                }
                 getDataByRefresh(requestPageSize);
             } else {
                 getDataByRefresh(state.pageDefaultSize);
@@ -714,7 +727,9 @@ public class XRefresher extends LinearLayout implements FlexibleDividerDecoratio
      * @return
      */
     public CustomHolder getFooter() {
-        if (!getAdapter().hasFooter()) return null;
+        if (!getAdapter().hasFooter()) {
+            return null;
+        }
         CustomHolder holder = (CustomHolder) getRecyclerView().getChildViewHolder(getRecyclerView().getChildAt(adapter.getItemCount() - 1));
         return holder;
     }

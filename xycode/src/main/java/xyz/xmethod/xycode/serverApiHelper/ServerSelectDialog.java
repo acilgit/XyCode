@@ -66,7 +66,7 @@ public class ServerSelectDialog implements View.OnClickListener {
 
     public ServerSelectDialog(ServerControllerActivity activity) {
         this.activity = activity;
-        api = activity.getApi();
+        api = ServerControllerActivity.getApi();
         builder = new AlertDialog.Builder(activity);
         /* 设置View */
         layout = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.dialog_base_server, null);
