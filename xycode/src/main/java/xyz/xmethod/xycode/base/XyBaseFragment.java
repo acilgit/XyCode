@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+
 
 import xyz.xmethod.xycode.interfaces.Interfaces;
 import xyz.xmethod.xycode.unit.MsgEvent;
@@ -26,12 +26,27 @@ public abstract class XyBaseFragment extends Fragment {
         return (XyBaseActivity) getActivity();
     }
 
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (useEventBus()) {
             EventBus.getDefault().register(this);
         }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return  inflater.inflate(setFragmentLayout(), container, false);
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initOnCreate(savedInstanceState);
     }
 
     @Override
@@ -42,6 +57,9 @@ public abstract class XyBaseFragment extends Fragment {
         super.onDestroy();
     }
 
+    protected abstract void initOnCreate(Bundle savedInstanceState);
+
+    protected abstract int setFragmentLayout();
     /**
      * EventBus
      */
@@ -78,58 +96,9 @@ public abstract class XyBaseFragment extends Fragment {
 
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (!loaded && loadFailed) tryLoad();
-    }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            tryLoad();
-            if (loaded) onShow();
-        } else {
-            if (loaded) onHide();
-        }
-    }
 
-    public boolean isLoaded() {
-        return loaded;
-    }
-
-    /**
-     *
-     */
-    protected void onShow() {
-
-    }
-
-    protected void onHide() {
-
-    }
-
-    /**
-     *
-     */
-    private void tryLoad() {
-        if (loaded || !this.isAdded()) {
-            loadFailed = true;
-            return;
-        }
-
-        onFirstShow();
-        loaded = true;
-    }
-
-    protected abstract void onFirstShow();
 
 
 }

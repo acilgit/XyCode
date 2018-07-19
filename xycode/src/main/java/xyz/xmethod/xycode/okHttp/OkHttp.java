@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
 import xyz.xmethod.xycode.base.XyBaseActivity;
 import xyz.xmethod.xycode.debugHelper.logHelper.JsonTool;
 import xyz.xmethod.xycode.debugHelper.logHelper.L;
@@ -15,8 +16,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -38,7 +41,7 @@ import okhttp3.Response;
 /**
  * Created by XiuYe on 2016/7/7
  * 对 OkHttp3 进行封装
- *
+ * <p>
  * 网络请求在RxJava的IO线程中进行
  * 上传文件则使用OkHttp的线程池进行请求
  */
@@ -155,6 +158,7 @@ public class OkHttp {
 
     /**
      * 设置Debug模式
+     *
      * @param debugMode
      */
     public static void setDebugMode(boolean debugMode) {
@@ -163,6 +167,7 @@ public class OkHttp {
 
     /**
      * 设置全局的MediaType
+     *
      * @param mediaType
      */
     public static void setRequestMediaType(MediaType mediaType) {
@@ -178,6 +183,7 @@ public class OkHttp {
 
     /**
      * 取得OkHttp Client实例
+     *
      * @return
      */
     public static OkHttpClient getClient() {
@@ -199,16 +205,26 @@ public class OkHttp {
 
     /**
      * 取得CallItem列表
+     *
      * @return
      */
     public static Map<String, CallItem> getCallItems() {
         if (callItems == null) {
-            callItems = new HashMap<>();
+            callItems = new ConcurrentSkipListMap<>();
         } else {
-            for (String key : callItems.keySet()) {
-                if (callItems.get(key) == null) {
-                    callItems.remove(key);
+            try {
+                Iterator<Map.Entry<String, CallItem>> entries = callItems.entrySet().iterator();
+
+                while (entries.hasNext()) {
+
+                    Map.Entry<String, CallItem> entry = entries.next();
+
+                    if (callItems.get(entry.getKey()) == null) {
+                        callItems.remove(entry.getKey());
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return callItems;
@@ -217,6 +233,7 @@ public class OkHttp {
     /**
      * 新建请求
      * 普通请求使用RxJava的IO线程，文件上传使用OkHttp的线程池上传
+     *
      * @param activity 不为空时，则会在主线程中完成请求结果回调，否则依然会在IO线程下进行
      * @return
      */
@@ -468,7 +485,7 @@ public class OkHttp {
                                 Thread.sleep(DEBUG_INTERVAL);
                             }
                         }
-                        if (debugItem.getJsonModify()!= null) {
+                        if (debugItem.getJsonModify() != null) {
                             responseItem.setStrResult(debugItem.getJsonModify());
                         }
                     }
@@ -594,6 +611,7 @@ public class OkHttp {
     /**
      * upload file，you can setMaxTransFileCount() to set max files upload thread pool size
      * uploadFiles暂时不提供Debug
+     *
      * @param activity
      * @param url
      * @param files

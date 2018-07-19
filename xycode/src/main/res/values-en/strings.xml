@@ -4,7 +4,7 @@
     <!--跟随系统语言，此目录为英文  引用名称需相同-->
 
 
-    <string name="xy_app_name">XyCode</string>
+    <string name="app_name">XyCode</string>
 
         
     <string name="blank"></string>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="xy_app_name">XyCode</string>
+    <string name="app_name">XyCode</string>
     <string name="blank"></string>
     <string name="text_take_photo">拍摄照片</string>
     <string name="text_photo_unit">张</string>
