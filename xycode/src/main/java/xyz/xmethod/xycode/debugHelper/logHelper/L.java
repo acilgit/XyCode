@@ -245,7 +245,7 @@ public class L {
         }*/
     }
 
-    private static void writeLog(Context context, Throwable ex) {
+    public static void writeLog(Context context, Throwable ex, String crashItem) {
         LOG_DIR = Tools.getCacheDir() + "/log/";
         String info = null;
         ByteArrayOutputStream baos = null;
@@ -253,7 +253,12 @@ public class L {
         try {
             baos = new ByteArrayOutputStream();
             printStream = new PrintStream(baos);
-            ex.printStackTrace(printStream);
+            if (crashItem != null) {
+                printStream.print(crashItem);
+            }
+            if (ex != null) {
+                ex.printStackTrace(printStream);
+            }
             byte[] data = baos.toByteArray();
             info = new String(data);
             data = null;

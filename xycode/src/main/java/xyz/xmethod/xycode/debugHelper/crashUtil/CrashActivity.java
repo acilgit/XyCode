@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+
 import xyz.xmethod.xycode.R;
 import xyz.xmethod.xycode.Xy;
 import xyz.xmethod.xycode.base.XyBaseActivity;
@@ -93,6 +94,14 @@ public class CrashActivity extends AppCompatActivity {
         if (cb != null) {
             cb.go(crashItem);
         }
+
+        //根据接口返回 是否保存到本地缓存文件，目录为 data/data/app/
+        if (iCrash != null) {
+            if (iCrash.getIsSaveCrashLogFile()) {
+                String jsonString = JSON.toJSONString(L.getLogList());
+                L.writeLog(Xy.getContext(), null, jsonString);
+            }
+        }
         if (iCrash != null && iCrash.getLayoutId() != 0) {
             setContentView(iCrash.getLayoutId());
             iCrash.setViews(this, crashItem);
@@ -117,17 +126,17 @@ public class CrashActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param catchErrorCallback 返回true则执行相关操作，否则直接关闭程序
      */
     public static void setCrashOperation(Interfaces.CB<CrashItem> catchErrorCallback) {
-        setCrashOperation( catchErrorCallback, null);
+        setCrashOperation(catchErrorCallback, null);
     }
 
     /**
      * 使用此方法打开CrashActivity
+     *
      * @param catchErrorCallback 返回true则执行相关操作，否则直接关闭程序
-     * @param iCrash    Null时则使用默认页面布局
+     * @param iCrash             Null时则使用默认页面布局
      */
     public static void setCrashOperation(Interfaces.CB<CrashItem> catchErrorCallback, ICrash iCrash) {
         CrashActivity.cb = catchErrorCallback;
@@ -163,16 +172,19 @@ public class CrashActivity extends AppCompatActivity {
 
     /**
      * 获得报错信息
+     *
      * @param errorMsg
      * @return
      */
     public CrashItem getCrashItem(String errorMsg) {
         CrashItem crashItem = null;
         try {
-            //应用的版本名称和版本号
+            //应用的包名版本名称和版本号
             PackageManager pm = this.getPackageManager();
             PackageInfo pi = pm.getPackageInfo(this.getPackageName(), PackageManager.GET_ACTIVITIES);
             crashItem = new CrashItem();
+            crashItem.setTime(DateUtils.formatDateTime("yyyy-M-d HH:mm:ss:SSS", DateUtils.getNow()));
+            crashItem.setPackageName(pi.packageName);
             crashItem.setVersionName(pi.versionName);
             crashItem.setVersionCode(pi.versionCode);
             //android版本号

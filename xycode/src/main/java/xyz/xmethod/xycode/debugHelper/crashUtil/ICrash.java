@@ -18,4 +18,11 @@ public interface ICrash {
      * @param crashItem 崩溃Item
      */
     void setViews(CrashActivity activity, CrashItem crashItem);
+
+    /**
+     * 是否保存崩溃日志写入本地data/data/com...文件
+     *
+     * @return true
+     */
+    boolean getIsSaveCrashLogFile();
 }

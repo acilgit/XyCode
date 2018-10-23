@@ -22,8 +22,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 241
-        versionName "0.2.41"
+        versionCode 242
+        versionName "0.2.42"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         /* jackOptions {
@@ -90,7 +90,7 @@ ext {
     siteUrl = 'https://github.com/acilgit/XyCode'
     gitUrl = 'https://github.com/acilgit/XyCode.git'
 
-    libraryVersion = '0.3.64'
+    libraryVersion = '0.3.68'
 
     developerId = 'acil'
     developerName = 'acil-fong'

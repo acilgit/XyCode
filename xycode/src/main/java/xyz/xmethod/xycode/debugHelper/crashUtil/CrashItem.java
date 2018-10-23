@@ -2,9 +2,19 @@ package xyz.xmethod.xycode.debugHelper.crashUtil;
 
 /**
  * Created by XY on 2017-06-05.
- *
  */
 public class CrashItem {
+
+    /**
+     * time
+     */
+    private String time;
+
+    /**
+     * 包名
+     */
+    private String packageName;
+
 
     /**
      * 版本名称
@@ -65,6 +75,22 @@ public class CrashItem {
     private String mark;
 
     public CrashItem() {
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
     public String getVersionName() {
@@ -158,6 +184,8 @@ public class CrashItem {
     @Override
     public String toString() {
         return "CrashItem{" +
+                "time='" + time + '\'' +
+                "packageName='" + packageName + '\'' +
                 "versionName='" + versionName + '\'' +
                 ", versionCode=" + versionCode +
                 ", release='" + release + '\'' +

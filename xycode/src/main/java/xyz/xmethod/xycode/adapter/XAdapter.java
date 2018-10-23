@@ -286,11 +286,12 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
                 return new CustomHolder(itemView) {
                     @Override
                     protected void createHolder(final CustomHolder holder) {
-                        /* 点击监听 */
-                        holder.setOnClickListener(v -> handleItemViewClick(holder, getShowingList().get(holder.getAdapterPosition() - getHeaderCount()), v.getId(), viewTypeUnit));
-                        /* 长按监听 */
-                        holder.setOnLongClickListener(v -> handleItemViewLongClick(holder, getShowingList().get(holder.getAdapterPosition() - getHeaderCount()), v.getId(), viewTypeUnit));
                         try {
+                            /* 点击监听 */
+                            holder.setOnClickListener(v -> handleItemViewClick(holder, getShowingList().get(holder.getLayoutPosition() - getHeaderCount()), v.getId(), viewTypeUnit));
+                            /* 长按监听 */
+                            holder.setOnLongClickListener(v -> handleItemViewLongClick(holder, getShowingList().get(holder.getLayoutPosition() - getHeaderCount()), v.getId(), viewTypeUnit));
+
                             creatingHolder(holder, viewTypeUnit);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -743,6 +744,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 更新Item
+     *
      * @param pos
      * @param item
      */
@@ -761,6 +763,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 添加Item
+     *
      * @param item
      */
     public void addItem(T item) {
@@ -776,6 +779,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 设置Footer Layout
+     *
      * @param footerLayout
      */
     public void setFooter(@LayoutRes int footerLayout) {
@@ -784,6 +788,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 添加默认Header，Key值为0
+     *
      * @param headerLayoutId
      */
     public void addHeader(@LayoutRes int headerLayoutId) {
@@ -792,6 +797,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 添加Header，避免使用Key为0的Header以免与默认Header发生碰撞
+     *
      * @param headerKey
      * @param headerLayoutId
      */
@@ -801,6 +807,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * Header的Holder 创建
+     *
      * @param holder
      * @param headerKey
      * @throws Exception
@@ -811,6 +818,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * Header OnBind
+     *
      * @param holder
      * @param headerKey
      * @throws Exception
@@ -821,6 +829,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * Footer的Holder创建
+     *
      * @param holder
      */
     protected void creatingFooter(CustomHolder holder) {
@@ -829,6 +838,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * Footer OnBind
+     *
      * @param holder
      */
     protected void bindingFooter(CustomHolder holder) {
@@ -849,6 +859,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * setDataList时，在Notify以前调用此方法，现在是空实现
+     *
      * @param dataList
      */
     protected void beforeSetDataList(List<T> dataList) {
@@ -948,6 +959,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 设置加载更多监听
+     *
      * @param loadMoreListener
      */
     public void setLoadMoreListener(ILoadMoreListener loadMoreListener) {
@@ -956,6 +968,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 设置加载中LayoutId
+     *
      * @param loadingLayoutId
      */
     public void setLoadingLayout(@LayoutRes int loadingLayoutId) {
@@ -964,6 +977,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 取得加载中LayoutId
+     *
      * @return
      */
     public int getLoadingLayoutId() {
@@ -972,6 +986,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 取得没有更多的LayoutId
+     *
      * @return
      */
     private int getNoMoreLayoutId() {
@@ -980,6 +995,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 设置没有更多的LayoutId
+     *
      * @param noMoreLayoutId
      */
     public void setNoMoreLayoutId(@LayoutRes int noMoreLayoutId) {
@@ -988,6 +1004,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 取得没有数据的LayoutId
+     *
      * @return
      */
     public int getNoDataLayoutId() {
@@ -996,6 +1013,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 设置没有数据的LayoutId
+     *
      * @param noDataLayoutId
      */
     public void setNoDataLayoutId(int noDataLayoutId) {
@@ -1004,6 +1022,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 取得重试的LayoutId
+     *
      * @return
      */
     public int getLoadRetryLayoutId() {
@@ -1012,6 +1031,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 设置重试的LayoutId
+     *
      * @param loadRetryLayoutId
      */
     public void setLoadRetryLayoutId(int loadRetryLayoutId) {
@@ -1020,6 +1040,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 设置是否使用默认的Laoder Layout
+     *
      * @param useDefaultLoaderLayout
      */
     public void setUseDefaultLoaderLayout(boolean useDefaultLoaderLayout) {
@@ -1028,6 +1049,7 @@ public abstract class XAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 有数据时是是否展示没Footer
+     *
      * @param showNoDataFooter
      */
     public void setShowNoDataFooter(boolean showNoDataFooter) {

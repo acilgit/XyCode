@@ -79,7 +79,7 @@ public abstract class ApiHelper {
      *
      * @param selectedUrl
      */
-    void setServerUrl(String selectedUrl) {
+   public void setServerUrl(String selectedUrl) {
         if (Xy.getStorage().getEditor().putString(SERVER, selectedUrl).commit()) {
             server = selectedUrl;
             api = null;
@@ -91,7 +91,7 @@ public abstract class ApiHelper {
      * @param newServerList
      * @return
      */
-    boolean setStoredServerList(List<String> newServerList) {
+   public boolean setStoredServerList(List<String> newServerList) {
         return (Xy.getStorage().getEditor().putString(SERVER_LIST, JSONArray.toJSONString(newServerList)).commit());
     }
 
