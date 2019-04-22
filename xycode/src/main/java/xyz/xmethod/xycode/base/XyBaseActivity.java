@@ -120,7 +120,7 @@ public abstract class XyBaseActivity extends AppCompatActivity {
     /**
      * 权限回调监听
      */
-    private PermissionListener mListener;
+    private PermissionListener mPermissionResultListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -592,8 +592,8 @@ public abstract class XyBaseActivity extends AppCompatActivity {
     /**
      * 权限封装处理
      */
-    public void requestRuntimePermissions(String[] permissions, PermissionListener listener) {
-        mListener = listener;
+    public void requestRuntimePermissions(String[] permissions, PermissionListener permissionListener) {
+        this.mPermissionResultListener = permissionListener;
         List<String> permissionList = new ArrayList<>();
         for (String permission : permissions) {
             /* 检测是否授权，没有授权添加入list中去授权*/
@@ -609,7 +609,9 @@ public abstract class XyBaseActivity extends AppCompatActivity {
                     permissionList.toArray(new String[permissionList.size()]),
                     REQUEST_PERIMISSION_CODE);
         } else {
-            mListener.onGranted();
+            if (mPermissionResultListener != null) {
+                mPermissionResultListener.onGranted();
+            }
         }
     }
 
@@ -627,10 +629,12 @@ public abstract class XyBaseActivity extends AppCompatActivity {
                             deniedPermission.add(permissions[i]);
                         }
                     }
-                    if (deniedPermission.isEmpty()) {
-                        mListener.onGranted();
+                    if (deniedPermission.isEmpty() && mPermissionResultListener != null) {
+                        mPermissionResultListener.onGranted();
                     } else {
-                        mListener.onDenied(deniedPermission);
+                        if (mPermissionResultListener != null) {
+                            mPermissionResultListener.onDenied(deniedPermission);
+                        }
                     }
                 }
                 break;
